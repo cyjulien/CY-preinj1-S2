@@ -1,5 +1,6 @@
 # CY-preing1-S2
 Todo list:
+
 Game logic:
 
     Characters and Teams
