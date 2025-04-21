@@ -1,0 +1,4 @@
+name
+    Example skill;
+desc
+    This skill does nothing;
