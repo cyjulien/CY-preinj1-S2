@@ -1,0 +1,4 @@
+name
+    Example skill;
+desc
+    This skill does nothing; git commit -m "Added gitignore and removed unwanted files."

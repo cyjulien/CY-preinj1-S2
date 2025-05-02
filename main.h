@@ -4,3 +4,5 @@
 #include <time.h>
 #include <errno.h>
 #include <string.h>
+
+#include "Logic/character.h"
