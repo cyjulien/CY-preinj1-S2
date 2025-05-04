@@ -3,15 +3,15 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX_ENERGY 100
+#define MAX_ENERGY 1000
 #define NUM_CHAMPIONS 3
-#define ACTION_COST 20
+#define ACTION_COST 200
 
 // Champion structure
 typedef struct {
     char name[50];
     int energy;
-    int attackSpeed;  // Attack speed (random between 0 and 100)
+    int SPD;  // Speed (random between 0 and 100)
 } Champion;
 
 // Team structure
@@ -20,7 +20,7 @@ typedef struct {
 } Team;
 
 // Function to generate random attack speed
-int generateRandomAttackSpeed() {
+int generateRandomSPD() {
     return rand() % 101;  // Random number between 0 and 100
 }
 
@@ -28,19 +28,17 @@ int generateRandomAttackSpeed() {
 void initializeChampion(Champion *champion, const char *name) {
     strcpy(champion->name, name);
     champion->energy = MAX_ENERGY;
-    champion->attackSpeed = generateRandomAttackSpeed();
-    printf("Champion %d %d\n", champion->energy, champion->attackSpeed);
+    champion->SPD = generateRandomSPD();
+    printf("Champion %d %d\n", champion->energy, champion->SPD);
 }
 
 // Function to calculate energy regeneration for each champion
 void regenerateEnergy(Team *team, int numAllies, int numEnemies) {
     int totalParticipants = numAllies + numEnemies;
     for (int i = 0; i < NUM_CHAMPIONS; i++) {
-        float regenF = (10 / totalParticipants) * team->champions[i].attackSpeed/100;
-        float ratio = (10 / totalParticipants);
-        int regen = regenF;
+        int regen = 10 * (10.0 / totalParticipants) * 1+team->champions[i].SPD/100.0;
         team->champions[i].energy += regen;
-        printf("Regenerating %f %f %d energy for %s\n", ratio, team->champions[i].attackSpeed/100, regen, team->champions[i].name);
+        printf("Regenerating %d energy for %s\n", regen, team->champions[i].name);
         if (team->champions[i].energy > MAX_ENERGY) {
             team->champions[i].energy = MAX_ENERGY; // Cap the energy at 100
         }
@@ -69,10 +67,10 @@ Champion* findChampionWithMaxEnergy(Team *team) {
 }
 
 // Function to sort champions by attack speed for the first turn
-void sortChampionsByAttackSpeed(Team *team) {
+void sortChampionsBySPD(Team *team) {
     for (int i = 0; i < NUM_CHAMPIONS - 1; i++) {
         for (int j = i + 1; j < NUM_CHAMPIONS; j++) {
-            if (team->champions[i].attackSpeed < team->champions[j].attackSpeed) {
+            if (team->champions[i].SPD < team->champions[j].SPD) {
                 // Swap champions[i] and champions[j]
                 Champion temp = team->champions[i];
                 team->champions[i] = team->champions[j];
@@ -88,8 +86,8 @@ void handleTurn(Team *team1, Team *team2, int turn) {
 
     // First turn: The champion with the highest attack speed goes first
     if (turn == 1) {
-        sortChampionsByAttackSpeed(team1);
-        sortChampionsByAttackSpeed(team2);
+        sortChampionsBySPD(team1);
+        sortChampionsBySPD(team2);
     }
 
     // For subsequent turns, the champion with the highest energy goes first
@@ -111,26 +109,4 @@ void handleTurn(Team *team1, Team *team2, int turn) {
     regenerateEnergy(team2, NUM_CHAMPIONS, NUM_CHAMPIONS);
 
     printf("\nEnd of Turn %d\n", turn);
-}
-
-int main() {
-    srand(time(NULL));
-
-    // Initialize teams
-    Team team1, team2;
-
-    initializeChampion(&team1.champions[0], "Champion1_Team1");
-    initializeChampion(&team1.champions[1], "Champion2_Team1");
-    initializeChampion(&team1.champions[2], "Champion3_Team1");
-
-    initializeChampion(&team2.champions[0], "Champion1_Team2");
-    initializeChampion(&team2.champions[1], "Champion2_Team2");
-    initializeChampion(&team2.champions[2], "Champion3_Team2");
-
-    // Simulate turns
-    for (int turn = 1; turn <= 5; turn++) {
-        handleTurn(&team1, &team2, turn);
-    }
-
-    return 0;
 }

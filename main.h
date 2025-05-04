@@ -6,3 +6,4 @@
 #include <string.h>
 
 #include "Logic/character.h"
+#include "Logic/gameloop.c"
