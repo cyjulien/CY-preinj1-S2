@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #define MAX_ENERGY 100
@@ -28,14 +29,18 @@ void initializeChampion(Champion *champion, const char *name) {
     strcpy(champion->name, name);
     champion->energy = MAX_ENERGY;
     champion->attackSpeed = generateRandomAttackSpeed();
+    printf("Champion %d %d\n", champion->energy, champion->attackSpeed);
 }
 
 // Function to calculate energy regeneration for each champion
 void regenerateEnergy(Team *team, int numAllies, int numEnemies) {
     int totalParticipants = numAllies + numEnemies;
     for (int i = 0; i < NUM_CHAMPIONS; i++) {
-        int regen = (10 / totalParticipants) * team->champions[i].attackSpeed;
+        float regenF = (10 / totalParticipants) * team->champions[i].attackSpeed/100;
+        float ratio = (10 / totalParticipants);
+        int regen = regenF;
         team->champions[i].energy += regen;
+        printf("Regenerating %f %f %d energy for %s\n", ratio, team->champions[i].attackSpeed/100, regen, team->champions[i].name);
         if (team->champions[i].energy > MAX_ENERGY) {
             team->champions[i].energy = MAX_ENERGY; // Cap the energy at 100
         }
@@ -91,7 +96,7 @@ void handleTurn(Team *team1, Team *team2, int turn) {
     if (turn > 1) {
         Champion *firstPlayer = findChampionWithMaxEnergy(team1);
         Champion *secondPlayer = findChampionWithMaxEnergy(team2);
-        
+
         // Perform actions for the champions with the highest energy
         if (firstPlayer->energy >= ACTION_COST) {
             performAction(firstPlayer);
@@ -129,4 +134,3 @@ int main() {
 
     return 0;
 }
-

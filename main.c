@@ -1,8 +1,8 @@
 #include "main.h"
 
 int main(int argc, char const *argv[]) {
-  int res = 0;
-  getCharacter("example");
-  printf("%d\n", res);
+  logCharacter(getCharacter("Example"));
+  logCharacter(getCharacter("Johnson"));
+  printf("Execution ended.\n");
   return 0;
 }

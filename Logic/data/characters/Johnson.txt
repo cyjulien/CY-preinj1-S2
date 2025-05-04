@@ -1,0 +1,11 @@
+Name: Johnson
+HP: 5260
+maxHP: 5260
+ATK: 12
+DEF: 750
+DODGE: 25
+SPD: 30
+Mana: 80
+Skills:
+    chargedAtk
+    explosion;
