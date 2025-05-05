@@ -3,44 +3,45 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX_ENERGY 1000
+#define MAX_ENERGY 500
 #define MAX_HP 1000  // Points de vie maximaux
 #define NUM_CHAMPIONS 1  // Un seul champion par équipe
-#define ACTION_COST 200
+#define ACTION_COST 100
 #define MAX_DAMAGE 150  // Dégâts maximum d'une attaque
-
+/*
 // Champion structure
 typedef struct {
     char name[50];
     int energy;
-    int hp;  // Points de vie
+    int HP;  // Points de vie
     int SPD; // Speed (random between 0 and 100)
 } Champion;
-
+*/
 // Team structure
 typedef struct {
-    Champion champions[NUM_CHAMPIONS];
+    Character champions[NUM_CHAMPIONS];
 } Team;
 
 // Function to generate random attack speed
 int generateRandomSPD() {
     return rand() % 101;  // Random number between 0 and 100
 }
-
+/*
 // Function to initialize the champion
 void initializeChampion(Champion *champion, const char *name) {
     strcpy(champion->name, name);
     champion->energy = MAX_ENERGY;
-    champion->hp = MAX_HP;
+    champion->HP = MAX_HP;
     champion->SPD = generateRandomSPD();
-    printf("Champion %s initialized with %d energy, %d HP and SPD %d\n", champion->name, champion->energy, champion->hp, champion->SPD);
+    printf("Champion %s initialized with %d energy, %d HP and SPD %d\n", champion->name, champion->energy, champion->HP, champion->SPD);
 }
-
+*/
 // Function to regenerate energy for each champion
 void regenerateEnergy(Team *team) {
     for (int i = 0; i < NUM_CHAMPIONS; i++) {
-        int regen = 10 + (team->champions[i].SPD / 10);  // Simple regeneration formula
+        int regen = (75.0 / (NUM_CHAMPIONS*2)) * team->champions[i].SPD/100.0;  // Simple regeneration formula
         team->champions[i].energy += regen;
+        printf("%s regenerates %d energy.\n", team->champions[i].name, regen);
         if (team->champions[i].energy > MAX_ENERGY) {
             team->champions[i].energy = MAX_ENERGY; // Cap the energy at MAX_ENERGY
         }
@@ -48,12 +49,12 @@ void regenerateEnergy(Team *team) {
 }
 
 // Function to perform an attack
-void performAttack(Champion *attacker, Champion *defender) {
+void performAttack(Character *attacker, Character *defender) {
     if (attacker->energy >= ACTION_COST) {
-        int damage = (rand() % MAX_DAMAGE) + (attacker->SPD / 2);  // Random damage based on SPD
-        defender->hp -= damage;
+        int damage = attacker->ATK*0.8;  // Random damage based on SPD
+        defender->HP -= damage;
         attacker->energy -= ACTION_COST;
-        printf("%s attacks %s, dealing %d damage! %s's HP is now %d.\n", attacker->name, defender->name, damage, defender->name, defender->hp);
+        printf("%s attacks %s, dealing %d damage! %s's HP is now %d and energy remaining is %d.\n", attacker->name, defender->name, damage, defender->name, defender->HP, attacker->energy);
     } else {
         printf("%s does not have enough energy to perform an attack!\n", attacker->name);
     }
@@ -93,15 +94,15 @@ void handleRound(Team *player, Team *enemy, int round) {
 
     // Player's turn
     playerTurn(player, enemy);
-    
+
     // Regenerate energy for both players after the player's turn
     regenerateEnergy(player);
     regenerateEnergy(enemy);
 
     // Display status
     printf("\nStatus after your turn:\n");
-    printf("%s - Energy: %d, HP: %d\n", player->champions[0].name, player->champions[0].energy, player->champions[0].hp);
-    printf("%s - Energy: %d, HP: %d\n", enemy->champions[0].name, enemy->champions[0].energy, enemy->champions[0].hp);
+    printf("%s - Energy: %d, HP: %d\n", player->champions[0].name, player->champions[0].energy, player->champions[0].HP);
+    printf("%s - Energy: %d, HP: %d\n", enemy->champions[0].name, enemy->champions[0].energy, enemy->champions[0].HP);
 
     // Enemy's turn
     enemyTurn(enemy, player);
@@ -112,37 +113,8 @@ void handleRound(Team *player, Team *enemy, int round) {
 
     // Display status
     printf("\nStatus after enemy's turn:\n");
-    printf("%s - Energy: %d, HP: %d\n", player->champions[0].name, player->champions[0].energy, player->champions[0].hp);
-    printf("%s - Energy: %d, HP: %d\n", enemy->champions[0].name, enemy->champions[0].energy, enemy->champions[0].hp);
+    printf("%s - Energy: %d, HP: %d\n", player->champions[0].name, player->champions[0].energy, player->champions[0].HP);
+    printf("%s - Energy: %d, HP: %d\n", enemy->champions[0].name, enemy->champions[0].energy, enemy->champions[0].HP);
 
     printf("\n--- End of Round %d ---\n", round);
 }
-
-int main() {
-    srand(time(NULL)); // Initialize random seed
-
-    Team player, enemy;
-
-    // Initialize the player and enemy champions
-    initializeChampion(&player.champions[0], "Player Champion");
-    initializeChampion(&enemy.champions[0], "Enemy Champion");
-
-    int round = 1;
-    
-    while (player.champions[0].hp > 0 && enemy.champions[0].hp > 0) {
-        handleRound(&player, &enemy, round);
-        round++;
-    }
-
-    // Check who won
-    if (player.champions[0].hp > 0) {
-        printf("You win!\n");
-    } else if (enemy.champions[0].hp > 0) {
-        printf("You lose! Enemy wins.\n");
-    } else {
-        printf("It's a draw!\n");
-    }
-
-    return 0;
-}
-

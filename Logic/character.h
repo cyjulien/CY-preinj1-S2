@@ -26,9 +26,9 @@ typedef struct {
 
 /**
  * @brief Creates a new character.
- * 
+ *
  * Creates a character with default values
- * 
+ *
  * @return Character structure with default values.
  */
 Character newEmptyCharacter() {
@@ -48,9 +48,9 @@ Character newEmptyCharacter() {
 
 /**
  * @brief Prints a character's data in the console.
- * 
+ *
  * Debug function to print a character's data.
- * 
+ *
  * @param character The character to be printed.
  */
 void logCharacter(Character character) {
@@ -59,10 +59,10 @@ void logCharacter(Character character) {
 
 /**
  * @brief Loads a character from a file based on their name.
- * 
+ *
  * Searches for a file in "Logic/data/characters/"
  * and attempts to parse character data from it.
- * 
+ *
  * @param name The name of the character (must be the same as filename: name.txt).
  * @return Character structure with either the data from the file or NullCharacter is the file is missing (NullCharacter's maxHP will be the error code).
  */
@@ -104,6 +104,7 @@ Character getCharacter(char *name) {
     //printf("------------------------\ncolonPos:%d dataLen: %d, char %d\n------------------------\n", colonPos, strlen(dataLine), sizeof(char));
     //printf("%s: %s\n", field, value);
     if (strcmp("Name", field) == 0) {
+      character.name = malloc(strlen(value) * sizeof(char));
       memcpy(character.name, value, strlen(value));
     }
     if (strcmp("HP", field) == 0) {
