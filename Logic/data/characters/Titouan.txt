@@ -1,0 +1,11 @@
+Name: Titouan
+Lv: 1
+maxHP: 2400
+ATK: 1200
+DEF: 500
+DODGE: 10
+SPD: 20
+Energy: 400
+Skills:
+    chargedAtk
+    explosion;

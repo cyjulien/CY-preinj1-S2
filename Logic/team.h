@@ -2,10 +2,9 @@
  * @file team.h
  * @brief Contains team-related functions and definitions.
  */
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define MAX_TEAM_MEMBERS_COUNT 3
 
 /**
  * @struct Team
@@ -14,7 +13,7 @@
 typedef struct {
     char *name;               /**< The Team's name. */
     int membersCount;         /**< How many Characters are in the team. */
-    Character *members;        /**< An array of all the team's members. */
+    Character *members;       /**< An array of all the team's members. */
 } Team;
 
 /**
@@ -40,7 +39,7 @@ Team newEmptyTeam() {
  * @param team The team to be printed.
  */
 void logTeam(Team team) {
-  printf("------------------------\nName: %s\nMembers:\n", team.name);
+  printf("------------------------\nName: %s\n%d Members:\n", team.name, team.membersCount);
   int isEmpty = 1;
   for (size_t i = 0; i < MAX_TEAM_MEMBERS_COUNT; i++) {
     if (strcmp("Null", team.members[i].name) != 0) {
@@ -49,7 +48,7 @@ void logTeam(Team team) {
     }
   }
   if (isEmpty) printf("The team is empty\n");
-  printf("\n------------------------\n");
+  printf("------------------------\n");
 }
 
 /**
@@ -89,41 +88,43 @@ Team getTeam(char *name) {
     char *field = malloc(colonPos * sizeof(char));
     strncpy(field, dataLine, colonPos);
     *(field+colonPos) = '\0';
-    if (strcmp("Members", field) == 0)
-    {
+    if (strcmp("Members", field) == 0) {
       int i = 0;
       while (!endOfFile) {
         if (fgetc(data) == EOF) {
           endOfFile = 1;
           break;
         }
-        printf("Dataline: %s||||\n", field, dataLine, strcspn(dataLine, "x"));
+        fseek(data, -1, 1);
         fgets(dataLine, 79, data);
-        printf("Dataline: %s||||\n", field, dataLine, strcspn(dataLine, "x"));
-        fgets(dataLine, 79, data);
-        printf("Dataline: %s||||\n", field, dataLine, strcspn(dataLine, "x"));
-        fgets(dataLine, 79, data);
-        printf("Dataline: %s||||\n", field, dataLine, strcspn(dataLine, "x"));
-        /*int valueLen = strlen(dataLine);
+        *(dataLine+strcspn(dataLine, "\r\n")) = '\0';
+        int valueLen = strlen(dataLine)-1;
         char *value = malloc((valueLen+1) * sizeof(char));
-        strncpy(field, dataLine, valueLen);
-        *(value+valueLen+1) = '\0';*/
-        printf(": %s__%d\n", field, dataLine, strcspn(dataLine, "x"));
-        team.members[i] = getCharacter(dataLine);
+        memcpy(value, strpbrk(dataLine, " ")+2, (valueLen+1));
+        *(value+valueLen) = '\0';
+        team.members[i] = getCharacter(value);
+        free(value);
+        value = NULL;
         i++;
-        free(field);
-        //free(value);
-        field = NULL;
-        //value = NULL;
       }
+      team.membersCount = i;
+      if (i < MAX_TEAM_MEMBERS_COUNT)
+      {
+        for (size_t j = i; j < MAX_TEAM_MEMBERS_COUNT; j++)
+        {
+          team.members[i] = newEmptyCharacter();
+        }
+        
+      }
+      
+      free(field);
+      field = NULL;
       break;
     }
     int valueLen = strlen(dataLine)-colonPos-2;
     char *value = malloc((valueLen+1) * sizeof(char));
     memcpy(value, strpbrk(dataLine, " ")+1, (valueLen+1));
     *(value+valueLen-1) = '\0';
-    //printf("------------------------\ncolonPos:%d dataLen: %d, char %d\n------------------------\n", colonPos, strlen(dataLine), sizeof(char));
-    //printf("%s: %s\n", field, value);
     if (strcmp("Name", field) == 0) {
       team.name = malloc((strlen(value)+1) * sizeof(char));
       memcpy(team.name, value, strlen(value)+1);
