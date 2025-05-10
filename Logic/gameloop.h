@@ -7,7 +7,7 @@
 void regenerateEnergy(Character *characters, int count) {
     for (int i = 0; i < count; i++) {
         if (characters[i].HP > 0) {
-            int regen = (75.0 / (MAX_TEAM_MEMBERS_COUNT * 2)) * characters[i].SPD / 100.0;
+            int regen = (50.0 / (count)) * (1 + characters[i].SPD / 100.0);
             characters[i].energy += regen;
             if (characters[i].energy > MAX_ENERGY) characters[i].energy = MAX_ENERGY;
             printf("%s regenerates %d energy.\n", characters[i].name, regen);
@@ -23,12 +23,14 @@ void performAction(Character *performer, Character *target, int action) {
         performer->energy -= skill.cost;
         
         //If the target is dodging and the performer is an enemy he gets a chance of avoiding the attack
+        printf("%s dodging: %d\n", target->name, target->isDodging);
         if (strcmp("Enemy", skill.target) == 0 && target->isDodging && (rand() % 100) < target->DODGE) {
             printf("%s dodged the attack from %s!\n", target->name, performer->name);
-            return;
-        } 
-        if (strcmp("HP", skill.affectTo) == 0 && skill.value != 0) {
+        } else if (strcmp("HP", skill.affectTo) == 0 && skill.value != 0) {
+            if (strcmp("Enemy", skill.target) == 0 && target->isDodging) printf("%s attempted to dodge but failed.\n", target->name);
             target->HP += skill.value;
+            if (target->HP < 0) target->HP = 0;
+            if (target->HP > target->maxHP) target->HP = target->maxHP;
             printf("%s uses ability %s on %s, it did %d %s. %s's HP is now %d.", performer->name, skill.name, target->name, abs(skill.value), skill.value<0?"damage":"heal", target->name, target->HP);
             if (strcmp("Null", skill.applyEffect) != 0) printf("%s is now under the %s effect.", target->name, "404");
             printf("\n");
@@ -71,7 +73,7 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
         action = rand() % 4;
     }
 
-    actor->isDodging = (action == 0);
+    actor->isDodging = !(action >= 1 && action <= actor->skillsCount);
 
     if (action >= 1 && action <= actor->skillsCount) {
         if (strcmp("Ally", actor->skills[action-1].target) == 0)
@@ -120,9 +122,9 @@ void handleRound(Character *allChars, Team players, Team enemies, int totalChars
 
     printf("\n--- Status after Round %d ---\n", round);
     for (size_t i = 0; i < players.membersCount; i++) {
-        printf("%s - Energy: %d, HP: %d/%d\n", players.members[i].name, players.members[i].energy, players.members[i].HP, players.members[i].maxHP);
+        printf("%s - Energy: %d, HP: %d/%d Dodge: %d\n", players.members[i].name, players.members[i].energy, players.members[i].HP, players.members[i].maxHP, players.members[i].isDodging);
     }
     for (size_t i = 0; i < enemies.membersCount; i++) {
-        printf("%s - Energy: %d, HP: %d/%d\n", enemies.members[i].name, enemies.members[i].energy, enemies.members[i].HP, enemies.members[i].maxHP);
+        printf("%s - Energy: %d, HP: %d/%d Dodge: %d\n", enemies.members[i].name, enemies.members[i].energy, enemies.members[i].HP, enemies.members[i].maxHP, players.members[i].isDodging);
     }
 }

@@ -4,7 +4,7 @@ maxHP: 2400
 ATK: 1200
 DEF: 500
 DODGE: 10
-SPD: 20
+SPD: 40
 Energy: 400
 Skills:
     Basic Attack

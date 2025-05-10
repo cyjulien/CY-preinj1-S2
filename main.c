@@ -9,7 +9,7 @@ int main(int argc, char const *argv[]) {
     Character allChars[MAX_TEAM_MEMBERS_COUNT * 2];
 
     int round = 1;
-    while (round < 50) {
+    while (round < 100) {
         for (int i = 0; i < players.membersCount; i++) {
             allChars[i] = players.members[i];
         }
