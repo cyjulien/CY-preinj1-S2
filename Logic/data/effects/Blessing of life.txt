@@ -1,0 +1,7 @@
+Name: Blessing of life
+Desc: Heals an ally a portion of it's max HP every turn.
+Value: 10%
+AffectTo: HP
+Target: Ally
+NTarget: 1
+Duration: 3

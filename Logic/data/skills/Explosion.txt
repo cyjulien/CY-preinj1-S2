@@ -1,0 +1,8 @@
+Name: Explosion
+Desc: Summons an explosion on the ennemies dealing AOE damage and burning them for 3 turns.
+Cost: 300
+Value: -250
+AffectTo: HP
+Target: Enemy
+NTarget: 3
+ApplyEffect: Brun

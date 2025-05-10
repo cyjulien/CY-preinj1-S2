@@ -7,5 +7,7 @@ DODGE: 0
 SPD: 100
 Energy: 500
 Skills:
-    chargedAtk;
-    explosion;
+    Basic Attack
+    Explosion
+    Charged Attack
+    Blessing of life

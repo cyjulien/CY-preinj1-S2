@@ -4,44 +4,37 @@
 #include <time.h>
 
 // Regenerate energy
-void regenerateEnergy(Character *champs, int count) {
+void regenerateEnergy(Character *characters, int count) {
     for (int i = 0; i < count; i++) {
-        if (champs[i].HP <= 0) continue;
-        int regen = (75.0 / (MAX_TEAM_MEMBERS_COUNT * 2)) * champs[i].SPD / 100.0;
-        champs[i].energy += regen;
-        if (champs[i].energy > MAX_ENERGY) champs[i].energy = MAX_ENERGY;
-        printf("%s regenerates %d energy.\n", champs[i].name, regen);
+        if (characters[i].HP > 0) {
+            int regen = (75.0 / (MAX_TEAM_MEMBERS_COUNT * 2)) * characters[i].SPD / 100.0;
+            characters[i].energy += regen;
+            if (characters[i].energy > MAX_ENERGY) characters[i].energy = MAX_ENERGY;
+            printf("%s regenerates %d energy.\n", characters[i].name, regen);
+        }
     }
 }
 
-// Perform attack
-void performAttack(Character *attacker, Character *defender, int ability) {
-    int damage = 0;
-    switch (ability) {
-        case 1: damage = 50; break;
-        case 2: damage = 100; break;
-        case 3: damage = 150; break;
-        default: return;
-    }
+// Perform action
+void performAction(Character *performer, Character *target, int action) {
+    Skill skill = performer->skills[action];
 
-    if (attacker->energy >= ACTION_COST) {
-        attacker->energy -= ACTION_COST;
+    if (performer->energy >= skill.cost) {
+        performer->energy -= skill.cost;
         
-        // We check the speed difference between the attacker and the defender
-        // Champion has a chance to dodge only if his speed is above the attcker
-        // The chances to dodge can't go above 40%
-        int chanceDodge = defender->SPD - attacker->SPD > 40 ? 40 : defender->SPD - attacker->SPD;
-        if(chanceDodge < 0) chanceDodge = 0;
-        
-        if ((rand() % 100) < chanceDodge) {
-            printf("%s dodged the attack from %s!\n", defender->name, attacker->name);
-        } else {
-            defender->HP -= damage;
-            printf("%s uses ability %d on %s, dealing %d damage! %s's HP is now %d.\n",
-                   attacker->name, ability, defender->name, damage, defender->name, defender->HP);
+        //If the target is dodging and the performer is an enemy he gets a chance of avoiding the attack
+        if (strcmp("Enemy", skill.target) == 0 && target->isDodging && (rand() % 100) < target->DODGE) {
+            printf("%s dodged the attack from %s!\n", target->name, performer->name);
+            return;
+        } 
+        if (strcmp("HP", skill.affectTo) == 0 && skill.value != 0) {
+            target->HP += skill.value;
+            printf("%s uses ability %s on %s, it did %d %s. %s's HP is now %d.", performer->name, skill.name, target->name, abs(skill.value), skill.value<0?"damage":"heal", target->name, target->HP);
+            if (strcmp("Null", skill.applyEffect) != 0) printf("%s is now under the %s effect.", target->name, "404");
+            printf("\n");
         }
     } else {
-        printf("%s does not have enough energy to perform the attack!\n", attacker->name);
+        printf("%s does not have enough energy to perform %s!\n", performer->name, skill.name);
     }
 }
 
@@ -53,30 +46,54 @@ int compareByEnergy(const void *a, const void *b) {
 }
 
 // Handle actions for a character
-void takeTurn(Character *actor, Character *opponents, int team) {
+void takeTurn(Character *actor, Character *allies, Character *opponents, int team) {
     if (actor->HP <= 0) return;
     printf("It's %s's turn from team: %d\n", actor->name, team);
     int action = 0;
     if (team == 1) { // Player
         printf("\n%s's turn! (HP: %d, Energy: %d)\n", actor->name, actor->HP, actor->energy);
-        printf("0. Dodge\n1. Ability 1 (50 dmg)\n2. Ability 2 (100 dmg)\n3. Ability 3 (150 dmg)\nYour choice: ");
-        scanf("%d", &action);
+        printf("0. Dodge\n");
+        for (size_t i = 0; i < actor->skillsCount; i++)
+        {
+            printf("%d. %s, cost: %d.\n   %s\n", i+1, actor->skills[i].name, actor->skills[i].cost, actor->skills[i].desc);
+        }
+        
+        printf("Your choice: ");
+        /**
+         * Safely takes in the user's input
+         * If the users enters an invalid input the action will default to 0 (dodge)
+         */
+        char input[50];
+        fgets(input, sizeof input, stdin);
+        input[strcspn(input, "\n")] = 0;
+        action = atoi(input);
     } else { // Enemy AI
         action = rand() % 4;
     }
 
     actor->isDodging = (action == 0);
 
-    if (action >= 1 && action <= 3) {
-        int target = rand() % MAX_TEAM_MEMBERS_COUNT;
-        while (opponents[target].HP <= 0) {
-            target = rand() % MAX_TEAM_MEMBERS_COUNT;
+    if (action >= 1 && action <= actor->skillsCount) {
+        if (strcmp("Ally", actor->skills[action-1].target) == 0)
+        {
+            int target = rand() % MAX_TEAM_MEMBERS_COUNT;
+            while (allies[target].HP <= 0) {
+                target = rand() % MAX_TEAM_MEMBERS_COUNT;
+            }
+            performAction(actor, &allies[target], action-1);
+        } else
+        {
+            int target = rand() % MAX_TEAM_MEMBERS_COUNT;
+            while (opponents[target].HP <= 0) {
+                target = rand() % MAX_TEAM_MEMBERS_COUNT;
+            }
+            performAction(actor, &opponents[target], action-1);
         }
-        performAttack(actor, &opponents[target], action);
-    } else if (action == 0) {
+    } else if (actor->energy >= DODGE_COST) {
+        actor->energy -= DODGE_COST;
         printf("%s prepares to dodge with a %d%% chance.\n", actor->name, actor->DODGE);
     } else {
-        printf("Invalid choice. %s skips the turn.\n", actor->name);
+        printf("%s doesn't have enough energy to dodge. Resting this turn\n", actor->name);
     }
 }
 
@@ -85,19 +102,27 @@ void handleRound(Character *allChars, Team players, Team enemies, int totalChars
     printf("\n--- Round %d ---\n", round);
 
     qsort(allChars, totalChars, sizeof(Character), compareByEnergy);
-
-    for (int i = 0; i < totalChars; i++) {
-        int actorTeam = 0;
-        for (size_t j = 0; j < players.membersCount; j++) {
-            if (strcmp(players.members[j].name, allChars[i].name) == 0) actorTeam = 1;
-        }
-        takeTurn(&allChars[i], actorTeam == 0 ? players.members : enemies.members, actorTeam);
+    for (size_t i = 0; i < 6; i++)
+    {
+        printf("%d. %s\n", i, allChars[i].name);
+    }
+    printf("-------------\n");
+    
+    for (size_t i = 0; i < players.membersCount; i++) {
+        if (strcmp(players.members[i].name, allChars[0].name) == 0) takeTurn(&players.members[i], players.members, enemies.members, 1);
+    }
+    for (size_t i = 0; i < enemies.membersCount; i++) {
+        if (strcmp(enemies.members[i].name, allChars[0].name) == 0) takeTurn(&enemies.members[i], enemies.members, players.members, 0);
     }
 
-    regenerateEnergy(allChars, totalChars);
+    regenerateEnergy(players.members, players.membersCount);
+    regenerateEnergy(enemies.members, enemies.membersCount);
 
     printf("\n--- Status after Round %d ---\n", round);
-    for (int i = 0; i < totalChars; i++) {
-        printf("%s - Energy: %d, HP: %d/%d\n", allChars[i].name, allChars[i].energy, allChars[i].HP, allChars[i].maxHP);
+    for (size_t i = 0; i < players.membersCount; i++) {
+        printf("%s - Energy: %d, HP: %d/%d\n", players.members[i].name, players.members[i].energy, players.members[i].HP, players.members[i].maxHP);
+    }
+    for (size_t i = 0; i < enemies.membersCount; i++) {
+        printf("%s - Energy: %d, HP: %d/%d\n", enemies.members[i].name, enemies.members[i].energy, enemies.members[i].HP, enemies.members[i].maxHP);
     }
 }

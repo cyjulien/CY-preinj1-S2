@@ -10,6 +10,7 @@ typedef struct {
     char *affectTo;
     char *target;
     int nTarget;
+    char *applyEffect;
 } Skill;
 
 /**
@@ -28,6 +29,7 @@ Skill newEmptySkill() {
     skill.affectTo = "Null";
     skill.target = "Null";
     skill.nTarget = 0;
+    skill.applyEffect = "Null";
     return skill;
 }
 
@@ -39,7 +41,7 @@ Skill newEmptySkill() {
  * @param Skill The Skill to be printed.
  */
 void logSkill(Skill skill) {
-    printf("------------------------\nName: %s\nDesc: %s\nCost: %d\nValue: %f\nAffectTo: %s\nTarget: %s\nNTarger: %d\n------------------------\n", skill.name, skill.desc, skill.cost, skill.value, skill.affectTo, skill.target, skill.nTarget);
+    printf("------------------------\nName: %s\nDesc: %s\nCost: %d\nValue: %f\nAffectTo: %s\nTarget: %s\nNTarget: %d\nApplyEffect: %s\n------------------------\n", skill.name, skill.desc, skill.cost, skill.value, skill.affectTo, skill.target, skill.nTarget, skill.applyEffect);
 }
 
 /**
@@ -56,43 +58,44 @@ Skill getSkill(char *name) {
     skill.name = "null";
     FILE *data = NULL;
     char path[50];
-    snprintf(path, sizeof(path), "Logic/data/skills/%s.txt", name);
+    snprintf(path, sizeof(path), "Logic/data/skills/%s.txt", name); //Using snprintf instead of strcat to avoid memory issues
     data = fopen(path, "r+");
     if (data == NULL) {
         printf("Error: %s\n", strerror(errno));
         skill.value = errno;
         if (errno == 2) {
-        printf("A Skill file was asked for but the Skill does not exist in the database. Make sure file names are correct, the maximun length for a name is 22.\n");
+            printf("%s was asked for but the Skill does not exist in the database. Make sure file names are correct, the maximun length for a name is 22.\n", name);
         }
         return skill;
     }
-    char dataLine[80];
+    char dataLine[150];
     int endOfFile = 0;
     while (!endOfFile) {
-        if (fgetc(data) == EOF) {
-            endOfFile = 1;
-            break;
+        if (fgetc(data) == EOF) { //Check for EOF
+          endOfFile = 1;
+          break;
         }
-        fseek(data, -1, 1);
-        fgets(dataLine, 79, data);
+        fseek(data, -1, 1); //Go back because of fgets
+        fgets(dataLine, 149, data); //Explore file line by line
         int colonPos = strcspn(dataLine, ":");
         char *field = malloc((colonPos+1) * sizeof(char));
         if (!field) {
-            printf("Memory allocation failed\n");
-            exit(303);
+            printf("Memory allocation failed 6060\n");
+            exit(606);
         }
         strncpy(field, dataLine, colonPos);
         *(field+colonPos) = '\0';
         int valueLen = strlen(dataLine)-colonPos-2;
         char *value = malloc((valueLen+1) * sizeof(char));
         if (!value) {
-            printf("Memory allocation failed\n");
-            exit(303);
+            printf("Memory allocation failed 6061\n");
+            exit(606);
         }
         memcpy(value, strpbrk(dataLine, " ")+1, valueLen);
         *(value+valueLen-1) = '\0';
-        //printf("------------------------\ncolonPos:%d dataLen: %d, fieldLen: %d, char %d\n------------------------\n", colonPos, strlen(dataLine), strlen(field), sizeof(char));
-        //printf("%s: %s\n", field, value);
+        /**
+         * Update the skill to the values read from the file:
+         */
         if (strcmp("Name", field) == 0) {
             skill.name = malloc((strlen(value)+1) * sizeof(char));
             memcpy(skill.name, value, (strlen(value)+1));
@@ -117,6 +120,10 @@ Skill getSkill(char *name) {
         }
         if (strcmp("NTarget", field) == 0) {
             skill.nTarget = atoi(value);
+        }
+        if (strcmp("ApplyEffect", field) == 0) {
+            skill.applyEffect = malloc((strlen(value)+1) * sizeof(char));
+            memcpy(skill.applyEffect, value, (strlen(value)+1));
         }
         /*
         free(skill.name);

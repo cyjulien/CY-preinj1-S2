@@ -8,15 +8,14 @@ int main(int argc, char const *argv[]) {
     Team enemies = getTeam("Team2");
     Character allChars[MAX_TEAM_MEMBERS_COUNT * 2];
 
-    for (int i = 0; i < players.membersCount; i++) {
-        allChars[i] = players.members[i];
-    }
-    for (int i = 0; i < enemies.membersCount; i++) {
-        allChars[i + players.membersCount] = enemies.members[i];
-    }
-
     int round = 1;
     while (round < 50) {
+        for (int i = 0; i < players.membersCount; i++) {
+            allChars[i] = players.members[i];
+        }
+        for (int i = 0; i < enemies.membersCount; i++) {
+            allChars[i + players.membersCount] = enemies.members[i];
+        }
         handleRound(allChars, players, enemies, MAX_TEAM_MEMBERS_COUNT * 2, round++);
     }
     for (int i = 0; i < players.membersCount; i++) {

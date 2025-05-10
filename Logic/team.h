@@ -65,41 +65,49 @@ Team getTeam(char *name) {
   team.name = "Null";
   FILE *data = NULL;
   char path[50];
-  snprintf(path, sizeof(path), "Logic/data/teams/%s.txt", name);
+  snprintf(path, sizeof(path), "Logic/data/teams/%s.txt", name); //Using snprintf instead of strcat to avoid memory issues
   data = fopen(path, "r+");
   if (data == NULL) {
     printf("Error: %s\n", strerror(errno));
     team.membersCount = errno;
     if (errno == 2) {
-      printf("A team file was asked for but the team does not exist in the database. Make sure file names are correct, the maximun length for a name is 22.\n");
+      printf("%s file was asked for but the team does not exist in the database. Make sure file names are correct, the maximun length for a name is 22.\n", name);
     }
     return team;
   }
-  char dataLine[80];
+  char dataLine[150];
   int endOfFile = 0;
   while (!endOfFile) {
-    if (fgetc(data) == EOF) {
+    if (fgetc(data) == EOF) { //Check for EOF
       endOfFile = 1;
       break;
     }
-    fseek(data, -1, 1);
-    fgets(dataLine, 79, data);
+    fseek(data, -1, 1); //Go back because of fgets
+    fgets(dataLine, 149, data); //Explore file line by line
     int colonPos = strcspn(dataLine, ":");
     char *field = malloc(colonPos * sizeof(char));
+    if (!field) {
+      printf("Memory allocation failed 505\n");
+      exit(505);
+    }
     strncpy(field, dataLine, colonPos);
     *(field+colonPos) = '\0';
     if (strcmp("Members", field) == 0) {
       int i = 0;
-      while (!endOfFile) {
+      while (!endOfFile && i < MAX_TEAM_MEMBERS_COUNT) {
         if (fgetc(data) == EOF) {
           endOfFile = 1;
           break;
         }
         fseek(data, -1, 1);
-        fgets(dataLine, 79, data);
+        fgets(dataLine, 149, data);
         *(dataLine+strcspn(dataLine, "\r\n")) = '\0';
         int valueLen = strlen(dataLine)-1;
         char *value = malloc((valueLen+1) * sizeof(char));
+        if (!value) {
+          printf("Memory allocation failed 505\n");
+          exit(505);
+        }
         memcpy(value, strpbrk(dataLine, " ")+2, (valueLen+1));
         *(value+valueLen) = '\0';
         team.members[i] = getCharacter(value);
@@ -123,10 +131,21 @@ Team getTeam(char *name) {
     }
     int valueLen = strlen(dataLine)-colonPos-2;
     char *value = malloc((valueLen+1) * sizeof(char));
+    if (!value) {
+      printf("Memory allocation failed 505\n");
+      exit(505);
+    }
     memcpy(value, strpbrk(dataLine, " ")+1, (valueLen+1));
     *(value+valueLen-1) = '\0';
+    /**
+     * Update the team's name to the value read from the file:
+     */
     if (strcmp("Name", field) == 0) {
       team.name = malloc((strlen(value)+1) * sizeof(char));
+      if (!team.name) {
+        printf("Memory allocation failed 505\n");
+        exit(505);
+      }
       memcpy(team.name, value, strlen(value)+1);
     }
     free(field);

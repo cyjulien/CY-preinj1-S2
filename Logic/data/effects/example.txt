@@ -1,4 +1,0 @@
-name
-    Example effect;
-desc
-    This effect does nothing;

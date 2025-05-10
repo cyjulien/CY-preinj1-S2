@@ -1,0 +1,8 @@
+Name: Blessing of life
+Desc: Heals an ally a portion of it's max HP over 3 turns.
+Cost: 400
+Value: 0
+AffectTo: HP
+Target: Ally
+NTarget: 1
+ApplyEffect: Blessing of life

@@ -24,7 +24,9 @@ typedef struct {
     int isDodging;            /**< Whether or not the character is currently dodging. */
     int energy;               /**< Energy for actions. */
     Skill *skills;            /**< Array of the character's skills. */
+    int skillsCount;          /**< How many skills does the character have. */
     Effect *effects;          /**< Array of the character's status effects. */
+    int effectsCount;         /**< How many effects are on the character. */
 } Character;
 
 /**
@@ -51,6 +53,7 @@ Character newEmptyCharacter() {
   {
     character.skills[i] = newEmptySkill();
   }
+  character.skillsCount = 0;
   character.effects = malloc(MAX_EFFECTS * sizeof(Effect));
   for (size_t i = 0; i < MAX_EFFECTS; i++)
   {
@@ -84,60 +87,76 @@ Character getCharacter(char *name) {
     character.name = "null";
     FILE *data = NULL;
     char path[50];
-    snprintf(path, sizeof(path), "Logic/data/characters/%s.txt", name);
+    snprintf(path, sizeof(path), "Logic/data/characters/%s.txt", name); //Using snprintf instead of strcat to avoid memory issues
     data = fopen(path, "r+");
     if (data == NULL) {
       printf("Error: %s\n", strerror(errno));
       character.maxHP = errno;
       if (errno == 2) {
-        printf("A character file was asked for but the character does not exist in the database. Make sure file names are correct, the maximun length for a name is 22.\n");
+        printf("%s was asked for but the character does not exist in the database. Make sure file names are correct, the maximun length for a name is 22.\n", name);
       }
       return character;
     }
-    char dataLine[80];
+    char dataLine[150];
     int endOfFile = 0;
     while (!endOfFile) {
-        if (fgetc(data) == EOF) {
+        if (fgetc(data) == EOF) { //Check for EOF
           endOfFile = 1;
           break;
         }
-        fseek(data, -1, 1);
-        fgets(dataLine, 79, data);
+        fseek(data, -1, 1); //Go back because of fgets
+        fgets(dataLine, 149, data); //Explore file line by line
         int colonPos = strcspn(dataLine, ":");
         char *field = malloc((colonPos+1) * sizeof(char));
         if (!field) {
-          printf("Memory allocation failed\n");
+          printf("Memory allocation failed 303\n");
           exit(303);
         }
         strncpy(field, dataLine, colonPos);
         *(field+colonPos) = '\0';
         if (strcmp("Skills", field) == 0)
         {
-          Skill skill = getSkill("Example");
-          for (size_t i = 0; i < MAX_SKILLS; i++)
-          {
-            if (strcmp("Null", character.skills[i].name) == 0)
-            {
-              character.skills[i] = skill;
-            } else if (i >= MAX_SKILLS)
-            {
-              printf("Error trying to register more than %d skills to one character, this can be changed in the config.", MAX_SKILLS);
+          int i = 0;
+          while (!endOfFile && i < MAX_SKILLS) {
+            if (fgetc(data) == EOF) {
+              endOfFile = 1;
               break;
             }
+            fseek(data, -1, 1);
+            fgets(dataLine, 149, data);
+            *(dataLine+strcspn(dataLine, "\r\n")) = '\0';
+            int valueLen = strlen(dataLine)-1;
+            char *value = malloc((valueLen+1) * sizeof(char));
+            memcpy(value, strpbrk(dataLine, " ")+4, (valueLen+1));
+            *(value+valueLen) = '\0';
+            character.skills[i] = getSkill(value);
+            free(value);
+            value = NULL;
+            i++;
           }
-          
+          character.skillsCount = i;
+          if (i < MAX_SKILLS)
+          {
+            for (size_t j = i; j < MAX_SKILLS; j++)
+            {
+              character.skills[i] = newEmptySkill();
+            }
+          }
+          free(field);
+          field = NULL;
           break;
         }
         int valueLen = strlen(dataLine)-colonPos-2;
         char *value = malloc((valueLen+1) * sizeof(char));
         if (!value) {
-          printf("Memory allocation failed\n");
+          printf("Memory allocation failed 303\n");
           exit(303);
         }
         memcpy(value, strpbrk(dataLine, " ")+1, valueLen);
         *(value+valueLen-1) = '\0';
-        //printf("------------------------\ncolonPos:%d dataLen: %d, char %d\n------------------------\n", colonPos, strlen(dataLine), sizeof(char));
-        //printf("%s: %s\n", field, value);
+        /**
+         * Update the character to the values read from the file:
+         */
         if (strcmp("Name", field) == 0) {
           character.name = malloc((strlen(value)+1) * sizeof(char));
           memcpy(character.name, value, (strlen(value)+1));
