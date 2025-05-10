@@ -1,37 +1,44 @@
 #include <stdio.h>
-#include "Logic/team.h" // Inclure les définitions de Team et Character
+#include "Logic/team.h" // Inclure les définitions pour Team et Character
 
-void interface0(Team equipeHaut, Team equipeBas) {
-    // Affichage de l'équipe en haut de l'écran
-    printf("=== Équipe en haut ===\n");
-    for (int i = 0; i < equipeHaut.membersCount; i++) {
-        printf("Nom: %s | HP: %d | Énergie: %d\n",
-               equipeHaut.members[i].name,
-               equipeHaut.members[i].HP,
-               equipeHaut.members[i].energy);
+void displayInterface(Team topTeam, Team bottomTeam, const char *dialogueMessage) {
+    // Display the top team
+    printf("  === [TOP TEAM] ===\n");
+    for (int i = 0; i < topTeam.membersCount; i++) {
+        printf("  Name: %s | HP: %d | Energy: %d\n",
+               topTeam.members[i].name,
+               topTeam.members[i].HP,
+               topTeam.members[i].energy);
     }
 
-    // Laisser de l'espace pour la boîte de dialogue
-    printf("\n=== Boîte de dialogue ===\n");
-    printf("Exemple : Blabla attaque blabla et fait 400 dégâts\n\n");
+    // Display dialogue box
+    printf("\n  === [DIALOGUE BOX] ===\n");
+    if (dialogueMessage) {
+        printf("  %s\n", dialogueMessage);
+    } else {
+        printf("  No actions yet...\n");
+    }
 
-    // Affichage de l'équipe en bas de l'écran
-    printf("=== Équipe en bas ===\n");
-    for (int i = 0; i < equipeBas.membersCount; i++) {
-        printf("Nom: %s | HP: %d | Énergie: %d\n",
-               equipeBas.members[i].name,
-               equipeBas.members[i].HP,
-               equipeBas.members[i].energy);
+    // Display the bottom team
+    printf("\n  === [BOTTOM TEAM] ===\n");
+    for (int i = 0; i < bottomTeam.membersCount; i++) {
+        printf("  Name: %s | HP: %d | Energy: %d\n",
+               bottomTeam.members[i].name,
+               bottomTeam.members[i].HP,
+               bottomTeam.members[i].energy);
     }
 }
 
 int main() {
-    // Exemple : Chargement des équipes depuis des fichiers
-    Team equipeHaut = getTeam("equipeHaut"); // Remplacer par le nom de fichier réel
-    Team equipeBas = getTeam("equipeBas");   // Remplacer par le nom de fichier réel
+    // Example teams for testing
+    Team topTeam = getTeam("topTeam");    // Replace with actual team data
+    Team bottomTeam = getTeam("bottomTeam"); // Replace with actual team data
 
-    // Appel de la fonction interface0
-    interface0(equipeHaut, equipeBas);
+    // Example dialogue message
+    const char *dialogueMessage = "Example: Player1 attacks Enemy1 and deals 400 damage.";
+
+    // Call the displayInterface function
+    displayInterface(topTeam, bottomTeam, dialogueMessage);
 
     return 0;
 }
