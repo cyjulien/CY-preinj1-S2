@@ -12,15 +12,15 @@ void combat_menu() {
     printf("A\n");
 }
 
-void equipe_menu() {
+void team_menu() {
     printf("B\n");
 }
 
-void boutique_menu() {
+void shop_menu() {
     printf("C\n");
 }
 
-void statistiques_menu() {
+void stats_menu() {
     printf("D\n");
 }
 
@@ -32,16 +32,16 @@ void main_menu() {
     int choice = 0;
 
     while (1) {
-        printf("\n=== Menu Principal ===\n");
-        printf(RED "1. Combat" RESET " - Affrontez des ennemis dans des batailles épiques.\n");
-        printf(GREEN "2. Équipe" RESET " - Gérez et améliorez votre équipe.\n");
-        printf(BLUE "3. Boutique" RESET " - Achetez des objets et équipements.\n");
-        printf("6. Quitter - Quittez le jeu.\n");
-        printf("Choisissez une option: ");
+        printf("\n=== Main Menu ===\n");
+        printf(RED "1. Combat" RESET " - Face enemies in epic battles.\n");
+        printf(GREEN "2. Team" RESET " - Manage and upgrade your team.\n");
+        printf(BLUE "3. Shop" RESET " - Buy items and equipment.\n");
+        printf("6. Quit - Exit the game.\n");
+        printf("Choose an option: ");
         
         if (scanf("%d", &choice) != 1) {
-            printf("Entrée invalide, veuillez réessayer.\n");
-            while (getchar() != '\n'); // Vider le buffer
+            printf("Invalid input, please try again.\n");
+            while (getchar() != '\n'); // Clear the buffer
             continue;
         }
 
@@ -50,22 +50,22 @@ void main_menu() {
                 combat_menu();
                 break;
             case 2:
-                equipe_menu();
+                team_menu();
                 break;
             case 3:
-                boutique_menu();
+                shop_menu();
                 break;
             case 4:
-                statistiques_menu();
+                stats_menu();
                 break;
             case 5:
                 options_menu();
                 break;
             case 6:
-                printf("Au revoir!\n");
+                printf("Goodbye!\n");
                 exit(0);
             default:
-                printf("Choix invalide, veuillez réessayer.\n");
+                printf("Invalid choice, please try again.\n");
         }
     }
 }
