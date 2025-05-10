@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <termios.h>
+#include <unistd.h>
 
 #define RESET "\033[0m"
 #define RED "\033[31m"
@@ -7,6 +9,19 @@
 #define BLUE "\033[34m"
 #define YELLOW "\033[33m"
 #define CYAN "\033[36m"
+
+// Fonction pour lire une touche sans appuyer sur Entrée
+char getch() {
+    struct termios oldt, newt;
+    char ch;
+    tcgetattr(STDIN_FILENO, &oldt); // Sauvegarde des paramètres du terminal
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO); // Désactive le mode canonique et l'écho
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restauration des paramètres
+    return ch;
+}
 
 void combat_menu() {
     printf("A\n");
@@ -30,42 +45,52 @@ void options_menu() {
 
 void main_menu() {
     int choice = 0;
+    int max_options = 6;
+    char key;
 
     while (1) {
+        system("clear"); // Efface l'écran sous Linux
         printf("\n=== Main Menu ===\n");
-        printf(RED "1. Combat" RESET " - Face enemies in epic battles.\n");
-        printf(GREEN "2. Team" RESET " - Manage and upgrade your team.\n");
-        printf(BLUE "3. Shop" RESET " - Buy items and equipment.\n");
-        printf("6. Quit - Exit the game.\n");
-        printf("Choose an option: ");
-        
-        if (scanf("%d", &choice) != 1) {
-            printf("Invalid input, please try again.\n");
-            while (getchar() != '\n'); // Clear the buffer
-            continue;
-        }
+        printf("%s1. Combat - Face enemies in epic battles.%s\n", choice == 0 ? RED : RESET, RESET);
+        printf("%s2. Team - Manage and upgrade your team.%s\n", choice == 1 ? GREEN : RESET, RESET);
+        printf("%s3. Shop - Buy items and equipment.%s\n", choice == 2 ? BLUE : RESET, RESET);
+        printf("%s4. Stats - View your stats.%s\n", choice == 3 ? YELLOW : RESET, RESET);
+        printf("%s5. Options - Change game settings.%s\n", choice == 4 ? CYAN : RESET, RESET);
+        printf("%s6. Quit - Exit the game.%s\n", choice == 5 ? RED : RESET, RESET);
 
-        switch (choice) {
-            case 1:
-                combat_menu();
-                break;
-            case 2:
-                team_menu();
-                break;
-            case 3:
-                shop_menu();
-                break;
-            case 4:
-                stats_menu();
-                break;
-            case 5:
-                options_menu();
-                break;
-            case 6:
-                printf("Goodbye!\n");
-                exit(0);
-            default:
-                printf("Invalid choice, please try again.\n");
+        key = getch(); // Lecture d'une touche sans appuyer sur Entrée
+
+        if (key == '\033') { // Séquence d'échappement pour les flèches
+            getch(); // Ignore le caractère '['
+            key = getch();
+            if (key == 'A') { // Flèche haut
+                choice = (choice - 1 + max_options) % max_options;
+            } else if (key == 'B') { // Flèche bas
+                choice = (choice + 1) % max_options;
+            }
+        } else if (key == '\n') { // Touche Entrée
+            switch (choice) {
+                case 0:
+                    combat_menu();
+                    break;
+                case 1:
+                    team_menu();
+                    break;
+                case 2:
+                    shop_menu();
+                    break;
+                case 3:
+                    stats_menu();
+                    break;
+                case 4:
+                    options_menu();
+                    break;
+                case 5:
+                    printf("Goodbye!\n");
+                    exit(0);
+            }
+            printf("Press any key to return to the menu...");
+            getch();
         }
     }
 }
