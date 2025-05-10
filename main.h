@@ -6,4 +6,6 @@
 #include <string.h>
 
 #include "Logic/character.h"
-#include "Logic/gameloop.c"
+#include "Logic/team.h"
+#include "Logic/config.h"
+#include "Logic/gameloop.h"

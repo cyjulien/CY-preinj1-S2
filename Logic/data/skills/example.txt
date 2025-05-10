@@ -1,4 +1,7 @@
-name
-    Example skill;
-desc
-    This skill does nothing; git commit -m "Added gitignore and removed unwanted files."
+Name: Example skill
+Desc: This skill does nothing
+Cost: 0
+Value: 0
+AffectTo: hp
+Target: hp
+NTarget: 1

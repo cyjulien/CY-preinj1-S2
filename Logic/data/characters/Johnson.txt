@@ -1,5 +1,5 @@
 Name: Johnson
-HP: 5260
+Lv: 1
 maxHP: 5260
 ATK: 600
 DEF: 750

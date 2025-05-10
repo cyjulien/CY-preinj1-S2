@@ -1,0 +1,11 @@
+Name: Geralt
+Lv: 1
+maxHP: 3250
+ATK: 750
+DEF: 700
+DODGE: 60
+SPD: 60
+Energy: 500
+Skills:
+    chargedAtk
+    explosion;

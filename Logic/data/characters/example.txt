@@ -1,11 +1,11 @@
 Name: Example
-HP: 1000
+Lv: 1
 maxHP: 1000
-ATK: 100
+ATK: 300
 DEF: 500
 DODGE: 0
 SPD: 100
-Mana: 100
+Energy: 500
 Skills:
-    chargedAtk
+    chargedAtk;
     explosion;

@@ -1,0 +1,11 @@
+Name: Luke
+Lv: 1
+maxHP: 2500
+ATK: 900
+DEF: 400
+DODGE: 80
+SPD: 75
+Energy: 500
+Skills:
+    chargedAtk
+    explosion;
