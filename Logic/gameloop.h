@@ -372,7 +372,7 @@ int takeTurn(Character *actor, Character *allies, Character *opponents, int team
 // Handle a full round
 void handleTurn(Character *allChars, Team players, Team enemies, int totalChars, char *dialogueMessage) {
     //Reset the dialogue message
-    snprintf(dialogueMessage, 750, "Information. \n  ");
+    snprintf(dialogueMessage, 750, "%s's turn: \n  ", allChars[0].name);
     // Check in which team the character is
     // Check if action happened to avoid infinite loop to regenerate energy
     int actionHappened = 0;
