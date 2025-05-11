@@ -247,7 +247,7 @@ int takeTurn(Character *actor, Character *allies, Character *opponents, int team
         printf("  0. Dodge\n");
         for (size_t i = 0; i < actor->skillsCount; i++)
         {
-            printf("  %d. %s, cost: %d.\n   %s\n", i+1, actor->skills[i].name, actor->skills[i].cost, actor->skills[i].desc);
+            printf("  %ld. %s, cost: %d.\n   %s\n", (i+1), actor->skills[i].name, actor->skills[i].cost, actor->skills[i].desc);
         }
         
         printf("  Your choice: ");
@@ -368,7 +368,7 @@ int takeTurn(Character *actor, Character *allies, Character *opponents, int team
 // Handle a full round
 void handleTurn(Character *allChars, Team players, Team enemies, int totalChars, char *dialogueMessage) {
     //Reset the dialogue message
-    snprintf(dialogueMessage, 750, "");
+    snprintf(dialogueMessage, 750, "Information. \n  ");
     // Check in which team the character is
     // Check if action happened to avoid infinite loop to regenerate energy
     int actionHappened = 0;
