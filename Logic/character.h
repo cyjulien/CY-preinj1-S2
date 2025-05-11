@@ -38,7 +38,7 @@ typedef struct {
  */
 Character newEmptyCharacter() {
   Character character;
-  character.name = "Null";
+  character.name = NULL;
   character.lvl = 0;
   character.maxHP = 0;
   character.HP = 0;
@@ -84,7 +84,7 @@ void logCharacter(Character character) {
  */
 Character getCharacter(char *name) {
     Character character = newEmptyCharacter();
-    character.name = "null";
+    character.name = "Null";
     FILE *data = NULL;
     char path[50];
     snprintf(path, sizeof(path), "Logic/data/characters/%s.txt", name); //Using snprintf instead of strcat to avoid memory issues

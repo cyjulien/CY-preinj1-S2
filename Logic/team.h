@@ -25,7 +25,7 @@ typedef struct {
  */
 Team newEmptyTeam() {
   Team team;
-  team.name = "Null";
+  team.name = NULL;
   team.membersCount = 0;
   team.members = malloc(MAX_TEAM_MEMBERS_COUNT * sizeof(Character));
   return team;

@@ -22,12 +22,12 @@ typedef struct {
  */
 Effect newEmptyEffect() {
     Effect effect;
-    effect.name = "Null";
-    effect.desc = "This effect does nothing";
+    effect.name = NULL;
+    effect.desc = NULL;
     effect.remaining = 0;
     effect.value = 0;
-    effect.affectTo = "Null";
-    effect.target = "Null";
+    effect.affectTo = NULL;
+    effect.target = NULL;
     effect.nTarget = 0;
     effect.duration = 0;
     return effect;
@@ -55,7 +55,7 @@ void logEffect(Effect effect) {
  */
 Effect getEffect(char *name) {
     Effect effect = newEmptyEffect();
-    effect.name = "null";
+    effect.name = "Null";
     FILE *data = NULL;
     char path[50];
     snprintf(path, sizeof(path), "Logic/data/effects/%s.txt", name); //Using snprintf instead of strcat to avoid memory issues

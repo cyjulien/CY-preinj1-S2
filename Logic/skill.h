@@ -22,14 +22,14 @@ typedef struct {
  */
 Skill newEmptySkill() {
     Skill skill;
-    skill.name = "Null";
-    skill.desc = "This skill does nothing";
+    skill.name = NULL;
+    skill.desc = NULL;
     skill.cost = 0;
     skill.value = 0;
-    skill.affectTo = "Null";
-    skill.target = "Null";
+    skill.affectTo = NULL;
+    skill.target = NULL;
     skill.nTarget = 0;
-    skill.applyEffect = "Null";
+    skill.applyEffect = NULL;
     return skill;
 }
 
@@ -55,7 +55,7 @@ void logSkill(Skill skill) {
  */
 Skill getSkill(char *name) {
     Skill skill = newEmptySkill();
-    skill.name = "null";
+    skill.name = "Null";
     FILE *data = NULL;
     char path[50];
     snprintf(path, sizeof(path), "Logic/data/skills/%s.txt", name); //Using snprintf instead of strcat to avoid memory issues
