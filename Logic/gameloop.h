@@ -10,7 +10,7 @@ void regenerateEnergy(Character *characters, int count) {
             int regen = (50.0 / (count)) * (1 + characters[i].SPD / 100.0);
             characters[i].energy += regen;
             if (characters[i].energy > MAX_ENERGY) characters[i].energy = MAX_ENERGY;
-            printf("%s regenerates %d energy.\n", characters[i].name, regen);
+            //printf("%s regenerates %d energy.\n", characters[i].name, regen);
         }
     }
 }
@@ -19,7 +19,7 @@ void applyValueToHp(Character *performer, Character *targets, Skill skill, int v
     targets[value].HP += skill.value;
     if (targets[value].HP < 0) targets[value].HP = 0;
     if (targets[value].HP > targets[value].maxHP) targets[value].HP = targets[value].maxHP;
-    printf("%s uses ability %s on %s, it did %d %s. %s's HP is now %d.", performer->name, skill.name, targets[value].name, abs(skill.value), skill.value<0?"damage":"heal", targets[value].name, targets[value].HP);
+    printf("  %s uses ability %s on %s, it did %d %s. %s's HP is now %d.", performer->name, skill.name, targets[value].name, abs(skill.value), skill.value<0?"damage":"heal", targets[value].name, targets[value].HP);
     if (strcmp("Null", skill.applyEffect) != 0) {
         Effect effect = getEffect(skill.applyEffect);
         int effectAlreadyApplied = 0;
@@ -42,7 +42,7 @@ void applyValueToHp(Character *performer, Character *targets, Skill skill, int v
 void applyValueToEnergy(Character *performer, Character *targets, Skill skill, int value) { // Helper function to avoid code duplication
     targets[value].energy += skill.value;
     if (targets[value].energy > MAX_ENERGY) targets[value].energy = MAX_ENERGY;
-    printf("%s %s %s, %s's energy is now %d.", performer->name, skill.value<0?"removes energy from":"regenerates energy to", targets[value].name, targets[value].name, targets[value].energy);
+    printf("  %s %s %s, %s's energy is now %d.", performer->name, skill.value<0?"removes energy from":"regenerates energy to", targets[value].name, targets[value].name, targets[value].energy);
     if (strcmp("Null", skill.applyEffect) != 0) {
         Effect effect = getEffect(skill.applyEffect);
         int effectAlreadyApplied = 0;
@@ -69,11 +69,11 @@ void performAction(Character *performer, Character *targets, int target, int act
     if (performer->energy >= skill.cost) {
         performer->energy -= skill.cost;
         //If the target is dodging and the performer is an enemy he gets a chance of avoiding the attack
-        printf("%s dodging: %d\n", targets[target].name, targets[target].isDodging);
+        //printf("%s dodging: %d\n", targets[target].name, targets[target].isDodging);
         if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging && (rand() % 100) < targets[target].DODGE) {
-            printf("%s dodged the attack from %s!\n", targets[target].name, performer->name);
+            printf("  %s dodged the attack from %s!\n", targets[target].name, performer->name);
         } else if (strcmp("HP", skill.affectTo) == 0 && skill.value != 0) {
-            if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging) printf("%s attempted to dodge but failed.\n", targets[target].name);
+            if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging) printf("  %s attempted to dodge but failed.\n", targets[target].name);
             //Deal damage to the targeted enemy
             if (skill.nTarget >= 1) {
                 applyValueToHp(performer, targets, skill, target);
@@ -98,16 +98,16 @@ void performAction(Character *performer, Character *targets, int target, int act
                         applyValueToHp(performer, targets, skill, target + (rand()%2==0?-1*(skill.nTarget/2):1*(skill.nTarget/2)));
                     }
                 } else {
-                    for (size_t i = 1; i < ((skill.nTarget - 1)/2)+1; i++) {
-                        if (target+i < MAX_TEAM_MEMBERS_COUNT) applyValueToHp(performer, targets, skill, target+i);
-                    }
-                    for (size_t i = 1; i < ((skill.nTarget - 1))/2+1; i++) {
-                        if (target-i >= 0) applyValueToHp(performer, targets, skill, target-i);
+                    for (size_t i = 1; i <= ((skill.nTarget - 1)/2); i++) {
+                        int right = target+i;
+                        if (right < MAX_TEAM_MEMBERS_COUNT) applyValueToHp(performer, targets, skill, right);
+                        int left = target-i;
+                        if (left >= 0) applyValueToHp(performer, targets, skill, left);
                     }
                 }
             }
         } else if (strcmp("Energy", skill.affectTo) == 0 && skill.value != 0) {
-            if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging) printf("%s attempted to dodge but failed.\n", targets[target].name);
+            if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging) printf("  %s attempted to dodge but failed.\n", targets[target].name);
             if (skill.nTarget >= 1) {
                 applyValueToEnergy(performer, targets, skill, target);
             }
@@ -131,17 +131,17 @@ void performAction(Character *performer, Character *targets, int target, int act
                         applyValueToEnergy(performer, targets, skill, target + (rand()%2==0?-1*(skill.nTarget/2):1*(skill.nTarget/2)));
                     }
                 } else {
-                    for (size_t i = 1; i < ((skill.nTarget - 1)/2)+1; i++) {
-                        if (target+i < MAX_TEAM_MEMBERS_COUNT) applyValueToEnergy(performer, targets, skill, target+i);
-                    }
-                    for (size_t i = 1; i < ((skill.nTarget - 1))/2+1; i++) {
-                        if (target-i >= 0) applyValueToEnergy(performer, targets, skill, target-i);
+                    for (size_t i = 1; i <= ((skill.nTarget - 1)/2); i++) {
+                        int right = target+i;
+                        if (right < MAX_TEAM_MEMBERS_COUNT) applyValueToEnergy(performer, targets, skill, right);
+                        int left = target-i;
+                        if (left >= 0) applyValueToEnergy(performer, targets, skill, left);
                     }
                 }
             }
         }
     } else {
-        printf("%s does not have enough energy to perform %s!\n", performer->name, skill.name);
+        printf("  %s does not have enough energy to perform %s!\n", performer->name, skill.name);
     }
 }
 
@@ -153,14 +153,13 @@ int compareByEnergy(const void *a, const void *b) {
 }
 
 // Handle actions for a character
-void takeTurn(Character *actor, Character *allies, Character *opponents, int team) {
+void takeTurn(Character *actor, Character *allies, Character *opponents, int team, char *dialogueMessage) {
     if (actor->HP <= 0) return; // Skip if dead
-    printf("It's %s's turn from team: %d\n", actor->name, team);
     //Count down effects
     for (size_t i = 0; i < actor->effectsCount; i++) {
         if (actor->effects[i].remaining > 0) {
             if (actor->effects[i].remaining == 0) {
-                printf("%s's %s effect has ended.\n", actor->name, actor->effects[i].name);
+                printf("  %s's %s effect has ended.\n", actor->name, actor->effects[i].name);
                 // Remove the effect
                 for (size_t j = i; j < actor->effectsCount - 1; j++) {
                     actor->effects[j] = actor->effects[j + 1];
@@ -168,7 +167,7 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
                 actor->effectsCount--;
                 i--;
             }
-            printf("%s is under the %s effect: ", actor->name, actor->effects[i].name);
+            printf("  %s is under the %s effect: ", actor->name, actor->effects[i].name);
             if (strcmp("HP", actor->effects[i].affectTo) == 0) {
                 actor->HP += actor->effects[i].value;
                 if (actor->HP > actor->maxHP) actor->HP = actor->maxHP;
@@ -178,32 +177,26 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
                 } else {
                     printf("%s's HP is now %d.\n", actor->name, actor->HP);
                 }
-            } else if (strcmp("ATK", actor->effects[i].affectTo) == 0) {
-                actor->ATK += actor->effects[i].value;
-                printf("%s's ATK is now %d.\n", actor->name, actor->ATK);
-            } else if (strcmp("DEF", actor->effects[i].affectTo) == 0) {
-                actor->DEF += actor->effects[i].value;
-                printf("%s's DEF is now %d.\n", actor->name, actor->DEF);
             } else if (strcmp("Energy", actor->effects[i].affectTo) == 0) {
                 actor->energy += actor->effects[i].value;
                 if (actor->energy > MAX_ENERGY) actor->energy = MAX_ENERGY;
                 printf("%s's energy is now %d.\n", actor->name, actor->energy);
             }
             actor->effects[i].remaining--;
-            printf("%s's %s effect will last for %d more turns.\n", actor->name, actor->effects[i].name, actor->effects[i].remaining);
+            printf("  %s's %s effect will last for %d more turns.\n", actor->name, actor->effects[i].name, actor->effects[i].remaining);
         }
     }
     
     int action = 0;
     if (team == 1) { // Player
-        printf("\n%s's turn! (HP: %d, Energy: %d)\n", actor->name, actor->HP, actor->energy);
-        printf("0. Dodge\n");
+        printf("\n  %s's turn! (HP: %d, Energy: %d)\n", actor->name, actor->HP, actor->energy);
+        printf("  0. Dodge\n");
         for (size_t i = 0; i < actor->skillsCount; i++)
         {
-            printf("%d. %s, cost: %d.\n   %s\n", i+1, actor->skills[i].name, actor->skills[i].cost, actor->skills[i].desc);
+            printf("  %d. %s, cost: %d.\n   %s\n", i+1, actor->skills[i].name, actor->skills[i].cost, actor->skills[i].desc);
         }
         
-        printf("Your choice: ");
+        printf("  Your choice: ");
         /**
          * Safely takes in the user's input
          * If the users enters an invalid input the action will default to 0 (dodge)
@@ -220,18 +213,30 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
         if (strcmp("Ally", actor->skills[action-1].target) == 0)
         {
             int target = -1;
+            //Check if all targets are dead
+            int allDead = 0;
+            for (size_t i = 0; i < MAX_TEAM_MEMBERS_COUNT; i++)
+            {
+                if (allies[i].HP <= 0) {
+                    allDead++;
+                }
+            }
+            if (allDead >= MAX_TEAM_MEMBERS_COUNT) {
+                printf("  All allies are dead. You can't use this ability.\n");
+                return;
+            }
             if (team == 1) {
                 do {
-                    printf("Choose a target (1-%d): ", MAX_TEAM_MEMBERS_COUNT);
+                    printf("  Choose a target (1-%d): ", MAX_TEAM_MEMBERS_COUNT);
                     char input[50];
                     fgets(input, sizeof input, stdin);
                     input[strcspn(input, "\n")] = 0;
                     target = atoi(input)-1;
                     if (target < 0 || target >= MAX_TEAM_MEMBERS_COUNT) {
-                        printf("Invalid target %d. Please choose a valid target.\n", target+1);
+                        printf("  Invalid target %d. Please choose a valid target.\n", target+1);
                         target = -1;
                     } else if (allies[target].HP <= 0) {
-                        printf("Target %s is already dead. Please choose a valid target.\n", allies[target].name);
+                        printf("  Target %s is already dead. Please choose a valid target.\n", allies[target].name);
                         target = -1;
                     }
                     
@@ -245,18 +250,30 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
             performAction(actor, allies, target, action-1);
         } else {
             int target = -1;
+            //Check if all targets are dead
+            int allDead = 0;
+            for (size_t i = 0; i < MAX_TEAM_MEMBERS_COUNT; i++)
+            {
+                if (opponents[i].HP <= 0) {
+                    allDead++;
+                }
+            }
+            if (allDead >= MAX_TEAM_MEMBERS_COUNT) {
+                printf("  All opponents are dead. You can't use this ability.\n");
+                return;
+            }
             if (team == 1) {
                 do {
-                    printf("Choose a target (1-%d): ", MAX_TEAM_MEMBERS_COUNT);
+                    printf("  Choose a target (1-%d): ", MAX_TEAM_MEMBERS_COUNT);
                     char input[50];
                     fgets(input, sizeof input, stdin);
                     input[strcspn(input, "\n")] = 0;
                     target = atoi(input)-1;
                     if (target < 0 || target >= MAX_TEAM_MEMBERS_COUNT) {
-                        printf("Invalid target %d. Please choose a valid target.\n", target+1);
+                        printf("  Invalid target %d. Please choose a valid target.\n", target+1);
                         target = -1;
                     } else if (opponents[target].HP <= 0) {
-                        printf("Target %s is already dead. Please choose a valid target.\n", opponents[target].name);
+                        printf("  Target %s is already dead. Please choose a valid target.\n", opponents[target].name);
                         target = -1;
                     }
                 } while (target == -1 || opponents[target].HP <= 0);
@@ -270,38 +287,44 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
         }
     } else if (actor->energy >= DODGE_COST) {
         actor->energy -= DODGE_COST;
-        printf("%s prepares to dodge with a %d%% chance.\n", actor->name, actor->DODGE);
+        printf("  %s prepares to dodge with a %d%% chance.\n", actor->name, actor->DODGE);
+        dialogueMessage = malloc(250 * sizeof(char));
+        snprintf(dialogueMessage, sizeof(dialogueMessage), "  %s prepares to dodge with a %d%% chance.\n", actor->name, actor->DODGE);
     } else {
-        printf("%s doesn't have enough energy to dodge. Resting this turn\n", actor->name);
+        printf("  %s doesn't have enough energy to dodge. Resting this turn\n", actor->name);
+        dialogueMessage = malloc(250 * sizeof(char));
+        snprintf(dialogueMessage, sizeof(dialogueMessage), "  %s doesn't have enough energy to dodge. Resting this turn\n", actor->name);
     }
 }
 
 // Handle a full round
-void handleRound(Character *allChars, Team players, Team enemies, int totalChars, char *dialogueMessage) {
-    printf("\n--- Round ---\n");
-
-    qsort(allChars, totalChars, sizeof(Character), compareByEnergy);
-    for (size_t i = 0; i < 6; i++)
-    {
-        printf("%d. %s\n", i, allChars[i].name);
-    }
-    printf("-------------\n");
+void handleTurn(Character *allChars, Team players, Team enemies, int totalChars, char *dialogueMessage) {
+    //printf("\n--- Turn start ---\n");
     
     for (size_t i = 0; i < players.membersCount; i++) {
-        if (strcmp(players.members[i].name, allChars[0].name) == 0) takeTurn(&players.members[i], players.members, enemies.members, 1);
+        if (strcmp(players.members[i].name, allChars[0].name) == 0) takeTurn(&players.members[i], players.members, enemies.members, 1, dialogueMessage);
     }
     for (size_t i = 0; i < enemies.membersCount; i++) {
-        if (strcmp(enemies.members[i].name, allChars[0].name) == 0) takeTurn(&enemies.members[i], enemies.members, players.members, 0);
+        if (strcmp(enemies.members[i].name, allChars[0].name) == 0) takeTurn(&enemies.members[i], enemies.members, players.members, 0, dialogueMessage);
     }
 
     regenerateEnergy(players.members, players.membersCount);
     regenerateEnergy(enemies.members, enemies.membersCount);
 
-    printf("\n--- Status after Round ---\n");
+    /*printf("\n--- Status after Turn ---\n");
     for (size_t i = 0; i < players.membersCount; i++) {
         printf("%s - Energy: %d, HP: %d/%d Dodge: %d\n", players.members[i].name, players.members[i].energy, players.members[i].HP, players.members[i].maxHP, players.members[i].isDodging);
     }
     for (size_t i = 0; i < enemies.membersCount; i++) {
         printf("%s - Energy: %d, HP: %d/%d Dodge: %d\n", enemies.members[i].name, enemies.members[i].energy, enemies.members[i].HP, enemies.members[i].maxHP, players.members[i].isDodging);
+    }*/
+}
+
+void sortCharactersByEnergy(Character *allChars, int totalChars) {
+    qsort(allChars, totalChars, sizeof(Character), compareByEnergy);
+    /*for (size_t i = 0; i < 6; i++)
+    {
+        printf("%d. %s\n", i, allChars[i].name);
     }
+    printf("-------------\n");*/
 }

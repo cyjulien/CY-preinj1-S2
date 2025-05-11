@@ -49,9 +49,9 @@ void displayInterface(Team topTeam, Team bottomTeam, const char *dialogueMessage
     }
 }
 
-void displayFullInterface(Team topTeam, Team bottomTeam, const char *dialogueMessage) {
+void displayFullInterface(Team topTeam, Team bottomTeam, const char *dialogueMessage, Character allChars[MAX_TEAM_MEMBERS_COUNT * 2]) {
     // ─── TOP TEAM HEADER ────────────────────────────────────────────────
-    printf(COLOR_YELLOW "  [%s]---------------------------------------------------------------\n" COLOR_RESET, topTeam.name);
+    printf(COLOR_CYAN "  [%s]---------------------------------------------------------------\n" COLOR_RESET, topTeam.name);
 
     // Character names with index
     for (int i = 0; i < topTeam.membersCount; i++) {
@@ -75,7 +75,7 @@ void displayFullInterface(Team topTeam, Team bottomTeam, const char *dialogueMes
     printf("\n\n");
 
     // ─── BOTTOM TEAM HEADER ─────────────────────────────────────────────
-    printf(COLOR_YELLOW "  [%s]---------------------------------------------------------------\n" COLOR_RESET, bottomTeam.name);
+    printf(COLOR_MAGENTA "  [%s]---------------------------------------------------------------\n" COLOR_RESET, bottomTeam.name);
 
     // Character names with index
     for (int i = 0; i < bottomTeam.membersCount; i++) {
@@ -97,7 +97,19 @@ void displayFullInterface(Team topTeam, Team bottomTeam, const char *dialogueMes
         printf("  " COLOR_CYAN "[%-10s]" COLOR_RESET " %3d   ", ">>>>>>>>>>" + (10 - energyPercent), bottomTeam.members[i].energy);
     }
     printf("\n\n");
-
+    // ─── ACTION ORDER ───────────────────────────────────────────────────
+    printf(COLOR_YELLOW "  [ACTION ORDER]----------------------------------------------------------\n" COLOR_RESET);
+    for (size_t i = 0; i < (MAX_TEAM_MEMBERS_COUNT * 2); i++) {
+        int team = 1;
+        for (size_t j = 0; j < topTeam.membersCount; j++) {
+            if (strcmp(topTeam.members[j].name, allChars[i].name) == 0) team = 0;
+        }
+        if (team == 0) {
+            printf("  %d. %s%s%s\n", (i + 1), COLOR_CYAN, allChars[i].name, COLOR_RESET);
+        } else {
+            printf("  %d. %s%s%s\n", (i + 1), COLOR_MAGENTA, allChars[i].name, COLOR_RESET);
+        }
+    }
     // ─── DIALOGUE BOX ───────────────────────────────────────────────────
     printf(COLOR_YELLOW "  [DIALOGUE BOX]----------------------------------------------------------\n" COLOR_RESET);
     if (dialogueMessage && strlen(dialogueMessage) > 0) {
