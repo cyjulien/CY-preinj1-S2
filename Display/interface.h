@@ -50,52 +50,56 @@ void displayInterface(Team topTeam, Team bottomTeam, const char *dialogueMessage
 }
 
 void displayFullInterface(Team topTeam, Team bottomTeam, const char *dialogueMessage) {
-    printf("  [EQUIPE 1]---------------------------------------------------------------\n");
+    // ─── TOP TEAM HEADER ────────────────────────────────────────────────
+    printf(COLOR_YELLOW "  [%s]---------------------------------------------------------------\n" COLOR_RESET, topTeam.name);
 
-    // Top team names
+    // Character names with index
     for (int i = 0; i < topTeam.membersCount; i++) {
-        printf("  %s |%d|          ", topTeam.members[i].name, i);
+        printf("  %-12s|%d|   ", topTeam.members[i].name, i);
     }
     printf("\n");
 
-    // Top team HP bars (text-based visualization)
+    // HP bars + current HP value
     for (int i = 0; i < topTeam.membersCount; i++) {
         int hpPercent = (topTeam.members[i].HP * 10) / topTeam.members[i].maxHP;
-        printf("  [%*s]          ", 10, "##########" + (10 - hpPercent));
+        const char *color = (topTeam.members[i].HP > 0) ? COLOR_GREEN : COLOR_RED;
+        printf("  %s[%-10s]%s %3d   ", color, "##########" + (10 - hpPercent), COLOR_RESET, topTeam.members[i].HP);
     }
     printf("\n");
 
-    // Top team Energy bars
+    // Energy bars + current energy
     for (int i = 0; i < topTeam.membersCount; i++) {
         int energyPercent = (topTeam.members[i].energy * 10) / MAX_ENERGY;
-        printf("  [%-*s]          ", 10, ">>>>>>>>>>" + (10 - energyPercent));
+        printf("  " COLOR_CYAN "[%-10s]" COLOR_RESET " %3d   ", ">>>>>>>>>>" + (10 - energyPercent), topTeam.members[i].energy);
     }
     printf("\n\n");
 
-    printf("  [EQUIPE 2]---------------------------------------------------------------\n");
+    // ─── BOTTOM TEAM HEADER ─────────────────────────────────────────────
+    printf(COLOR_YELLOW "  [%s]---------------------------------------------------------------\n" COLOR_RESET, bottomTeam.name);
 
-    // Bottom team names
+    // Character names with index
     for (int i = 0; i < bottomTeam.membersCount; i++) {
-        printf("  %s |%d|          ", bottomTeam.members[i].name, i);
+        printf("  %-12s|%d|   ", bottomTeam.members[i].name, i);
     }
     printf("\n");
 
-    // Bottom team HP bars
+    // HP bars + current HP
     for (int i = 0; i < bottomTeam.membersCount; i++) {
         int hpPercent = (bottomTeam.members[i].HP * 10) / bottomTeam.members[i].maxHP;
-        printf("  [%*s]          ", 10, "##########" + (10 - hpPercent));
+        const char *color = (bottomTeam.members[i].HP > 0) ? COLOR_GREEN : COLOR_RED;
+        printf("  %s[%-10s]%s %3d   ", color, "##########" + (10 - hpPercent), COLOR_RESET, bottomTeam.members[i].HP);
     }
     printf("\n");
 
-    // Bottom team Energy bars
+    // Energy bars + current energy
     for (int i = 0; i < bottomTeam.membersCount; i++) {
         int energyPercent = (bottomTeam.members[i].energy * 10) / MAX_ENERGY;
-        printf("  [%-*s]          ", 10, ">>>>>>>>>>" + (10 - energyPercent));
+        printf("  " COLOR_CYAN "[%-10s]" COLOR_RESET " %3d   ", ">>>>>>>>>>" + (10 - energyPercent), bottomTeam.members[i].energy);
     }
     printf("\n\n");
 
-    // Dialogue box
-    printf("  [DIALOGUE BOX]----------------------------------------------------------\n");
+    // ─── DIALOGUE BOX ───────────────────────────────────────────────────
+    printf(COLOR_YELLOW "  [DIALOGUE BOX]----------------------------------------------------------\n" COLOR_RESET);
     if (dialogueMessage && strlen(dialogueMessage) > 0) {
         printf("  %s\n", dialogueMessage);
     } else {
