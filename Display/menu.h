@@ -54,8 +54,6 @@ void main_menu() {
         printf("%s1. Combat - Face enemies in epic battles.%s\n", choice == 0 ? RED : RESET, RESET);
         printf("%s2. Team - Manage and upgrade your team.%s\n", choice == 1 ? GREEN : RESET, RESET);
         printf("%s3. Shop - Buy items and equipment.%s\n", choice == 2 ? BLUE : RESET, RESET);
-        printf("%s4. Stats - View your stats.%s\n", choice == 3 ? YELLOW : RESET, RESET);
-        printf("%s5. Options - Change game settings.%s\n", choice == 4 ? CYAN : RESET, RESET);
         printf("%s6. Quit - Exit the game.%s\n", choice == 5 ? RED : RESET, RESET);
 
         key = getch(); // Lecture d'une touche sans appuyer sur Entrée
