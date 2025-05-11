@@ -10,4 +10,4 @@ Skills:
     Basic Attack
     Explosion
     Charged Attack
-    Blessing of life
+    Slash

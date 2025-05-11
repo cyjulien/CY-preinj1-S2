@@ -1,0 +1,8 @@
+Name: Regenerate
+Desc: Instantly regenerate energy for an ally.
+Cost: 300
+Value: 200
+AffectTo: Energy
+Target: Ally
+NTarget: 1
+ApplyEffect: Null

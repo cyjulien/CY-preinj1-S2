@@ -1,6 +1,7 @@
 #include "main.h"
 
 int main(int argc, char const *argv[]) {
+    printf("---------------------------------------------------------------------------------------------------------------------------------------\n");
     printf("Execution started.\n");
     srand(time(NULL));
 
@@ -10,13 +11,19 @@ int main(int argc, char const *argv[]) {
 
     int round = 1;
     while (round < 100) {
+        system("clear");
+        system("cls");
+
         for (int i = 0; i < players.membersCount; i++) {
             allChars[i] = players.members[i];
         }
         for (int i = 0; i < enemies.membersCount; i++) {
             allChars[i + players.membersCount] = enemies.members[i];
         }
-        handleRound(allChars, players, enemies, MAX_TEAM_MEMBERS_COUNT * 2, round++);
+        char *dialogueMessage = NULL;
+        //displayInterface(enemies, players, dialogueMessage);
+        displayFullInterface(players, enemies, dialogueMessage);
+        handleRound(allChars, players, enemies, MAX_TEAM_MEMBERS_COUNT * 2, dialogueMessage);
     }
     for (int i = 0; i < players.membersCount; i++) {
         free(players.members[i].name);

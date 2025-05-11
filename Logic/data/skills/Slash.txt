@@ -1,0 +1,8 @@
+Name: Slash
+Desc: Slashes forward dealing damage to 2 enemies
+Cost: 300
+Value: -200
+AffectTo: HP
+Target: Enemy
+NTarget: 2
+ApplyEffect: Null

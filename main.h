@@ -9,3 +9,5 @@
 #include "Logic/team.h"
 #include "Logic/config.h"
 #include "Logic/gameloop.h"
+
+#include "Display/interface.h"

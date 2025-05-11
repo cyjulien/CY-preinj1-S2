@@ -71,7 +71,7 @@ Team getTeam(char *name) {
     printf("Error: %s\n", strerror(errno));
     team.membersCount = errno;
     if (errno == 2) {
-      printf("%s file was asked for but the team does not exist in the database. Make sure file names are correct, the maximun length for a name is 22.\n", name);
+      printf("%s file was asked for but the team does not exist in the database. Make sure file names are correct, the maximum length for a name is 22.\n", name);
     }
     return team;
   }

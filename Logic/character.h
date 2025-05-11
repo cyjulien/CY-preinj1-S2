@@ -93,7 +93,7 @@ Character getCharacter(char *name) {
       printf("Error: %s\n", strerror(errno));
       character.maxHP = errno;
       if (errno == 2) {
-        printf("%s was asked for but the character does not exist in the database. Make sure file names are correct, the maximun length for a name is 22.\n", name);
+        printf("%s was asked for but the character does not exist in the database. Make sure file names are correct, the maximum length for a name is 22.\n", name);
       }
       return character;
     }

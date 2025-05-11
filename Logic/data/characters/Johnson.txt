@@ -1,6 +1,6 @@
 Name: Johnson
 Lv: 1
-maxHP: 5260
+maxHP: 526
 ATK: 600
 DEF: 750
 DODGE: 25

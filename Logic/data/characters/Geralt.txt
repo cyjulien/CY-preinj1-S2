@@ -1,6 +1,6 @@
 Name: Geralt
 Lv: 1
-maxHP: 3250
+maxHP: 603
 ATK: 750
 DEF: 700
 DODGE: 60

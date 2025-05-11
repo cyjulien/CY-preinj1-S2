@@ -64,7 +64,7 @@ Skill getSkill(char *name) {
         printf("Error: %s\n", strerror(errno));
         skill.value = errno;
         if (errno == 2) {
-            printf("%s was asked for but the Skill does not exist in the database. Make sure file names are correct, the maximun length for a name is 22.\n", name);
+            printf("%s was asked for but the Skill does not exist in the database. Make sure file names are correct, the maximum length for a name is 22.\n", name);
         }
         return skill;
     }
@@ -134,7 +134,6 @@ Skill getSkill(char *name) {
         free(value);
         field = NULL;
         value = NULL;
-        
     }
 
     fclose(data);

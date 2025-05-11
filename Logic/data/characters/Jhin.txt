@@ -8,3 +8,5 @@ SPD: 44
 Energy: 444
 Skills:
     Basic Attack
+    Regenerate
+    Black hole
