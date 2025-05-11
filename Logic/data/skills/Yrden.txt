@@ -1,0 +1,8 @@
+Name: Yrden
+Desc: Creates a zone slowing down ennemies inside it.
+Cost: 200
+Value: -200
+AffectTo: Energy
+Target: Enemy
+NTarget: 3
+ApplyEffect: Null

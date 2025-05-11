@@ -112,7 +112,7 @@ void displayFullInterface(Team topTeam, Team bottomTeam, const char *dialogueMes
     }
     // ─── DIALOGUE BOX ───────────────────────────────────────────────────
     printf(COLOR_YELLOW "  [DIALOGUE BOX]----------------------------------------------------------\n" COLOR_RESET);
-    if (dialogueMessage) {
+    if (dialogueMessage && strlen(dialogueMessage) > 0) {
         printf("  %s\n", dialogueMessage);
     } else {
         printf("  No action yet...\n");

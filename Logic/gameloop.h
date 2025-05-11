@@ -15,7 +15,7 @@ void regenerateEnergy(Character *characters, int count) {
     }
 }
 
-void applyValueToHp(Character *performer, Character *targets, Skill skill, int value) { // Helper function to avoid code duplication
+void applyValueToHp(Character *performer, Character *targets, Skill skill, int value, char *dialogueMessage) { // Helper function to avoid code duplication
     if (skill.value < 0) {
         int damage = (performer->ATK * (1 - targets[value].DEF/(targets[value].DEF+1000.0))) * ((-skill.value) / 100.0);
         if (damage < 0) damage = 0;
@@ -23,6 +23,7 @@ void applyValueToHp(Character *performer, Character *targets, Skill skill, int v
         if (targets[value].HP < 0) targets[value].HP = 0;
         if (targets[value].HP > targets[value].maxHP) targets[value].HP = targets[value].maxHP;
         printf("  %s uses ability %s on %s, it did %d damage. %s's HP is now %d.", performer->name, skill.name, targets[value].name, damage, targets[value].name, targets[value].HP);
+        snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s uses ability %s on %s, it did %d damage. %s's HP is now %d.", performer->name, skill.name, targets[value].name, damage, targets[value].name, targets[value].HP);
     } else {
         int heal = performer->maxHP * (skill.value / 100.0);
         if (heal < 0) heal = 0;
@@ -30,6 +31,7 @@ void applyValueToHp(Character *performer, Character *targets, Skill skill, int v
         if (targets[value].HP < 0) targets[value].HP = 0;
         if (targets[value].HP > targets[value].maxHP) targets[value].HP = targets[value].maxHP;
         printf("  %s uses ability %s on %s, it healed %d HP. %s's HP is now %d.", performer->name, skill.name, targets[value].name, heal, targets[value].name, targets[value].HP);
+        snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s uses ability %s on %s, it healed %d HP. %s's HP is now %d.", performer->name, skill.name, targets[value].name, heal, targets[value].name, targets[value].HP);
     }
     if (strcmp("Null", skill.applyEffect) != 0) {
         Effect effect = getEffect(skill.applyEffect);
@@ -40,20 +42,24 @@ void applyValueToHp(Character *performer, Character *targets, Skill skill, int v
                 targets[value].effects[i].remaining = effect.duration;
                 targets[value].effects[i].value = effect.value;
                 printf(" %s is under the %s effect for %d turns.", targets[value].name, effect.name, effect.duration);
+                snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), " %s is under the %s effect for %d turns.", targets[value].name, effect.name, effect.duration);
             }
         }
         if (!effectAlreadyApplied) {
             targets[value].effects[targets[value].effectsCount] = effect;
             targets[value].effectsCount++;
             printf(" %s is now under the %s effect for %d turns.", targets[value].name, effect.name, effect.duration);
+            snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), " %s is now under the %s effect for %d turns.", targets[value].name, effect.name, effect.duration);
         }
     }
     printf("\n");
+    snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "\n  ");
 }
-void applyValueToEnergy(Character *performer, Character *targets, Skill skill, int value) { // Helper function to avoid code duplication
+void applyValueToEnergy(Character *performer, Character *targets, Skill skill, int value, char *dialogueMessage) { // Helper function to avoid code duplication
     targets[value].energy += skill.value;
     if (targets[value].energy > MAX_ENERGY) targets[value].energy = MAX_ENERGY;
     printf("  %s %s %s, %s's energy is now %d.", performer->name, skill.value<0?"removes energy from":"regenerates energy to", targets[value].name, targets[value].name, targets[value].energy);
+    snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s %s %s, %s's energy is now %d.", performer->name, skill.value<0?"removes energy from":"regenerates energy to", targets[value].name, targets[value].name, targets[value].energy);
     if (strcmp("Null", skill.applyEffect) != 0) {
         Effect effect = getEffect(skill.applyEffect);
         int effectAlreadyApplied = 0;
@@ -63,18 +69,21 @@ void applyValueToEnergy(Character *performer, Character *targets, Skill skill, i
                 targets[value].effects[i].remaining = effect.duration;
                 targets[value].effects[i].value = effect.value;
                 printf(" %s is under the %s effect for %d turns.", targets[value].name, effect.name, effect.duration);
+                snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), " %s is under the %s effect for %d turns.", targets[value].name, effect.name, effect.duration);
             }
         }
         if (!effectAlreadyApplied) {
             targets[value].effects[targets[value].effectsCount] = effect;
             targets[value].effectsCount++;
             printf(" %s is now under the %s effect for %d turns.", targets[value].name, effect.name, effect.duration);
+            snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), " %s is now under the %s effect for %d turns.", targets[value].name, effect.name, effect.duration);
         }
     }
     printf("\n");
+    snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "\n  ");
 }
 // Perform action
-void performAction(Character *performer, Character *targets, int target, int action) {
+void performAction(Character *performer, Character *targets, int target, int action, char *dialogueMessage) {
     Skill skill = performer->skills[action];
 
     if (performer->energy >= skill.cost) {
@@ -83,76 +92,80 @@ void performAction(Character *performer, Character *targets, int target, int act
         //printf("%s dodging: %d\n", targets[target].name, targets[target].isDodging);
         if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging && (rand() % 100) < targets[target].DODGE) {
             printf("  %s dodged the attack from %s!\n", targets[target].name, performer->name);
+            snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s dodged the attack from %s!\n  ", targets[target].name, performer->name);
         } else if (strcmp("HP", skill.affectTo) == 0 && skill.value != 0) {
             if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging) printf("  %s attempted to dodge but failed.\n", targets[target].name);
+            if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging) snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s attempted to dodge but failed.\n  ", targets[target].name);
             //Deal damage to the targeted enemy
             if (skill.nTarget >= 1) {
-                applyValueToHp(performer, targets, skill, target);
+                applyValueToHp(performer, targets, skill, target, dialogueMessage);
             }
             //For multiple targets, if odd then deal damage to the left and right, if even then deal damage to the left or right randomly
             if (skill.nTarget > 1){
                 if (skill.nTarget%2 == 0){
                     for (size_t i = 1; i < skill.nTarget - 2; i++) {
-                        applyValueToHp(performer, targets, skill, target+i);
+                        applyValueToHp(performer, targets, skill, target+i, dialogueMessage);
                     }
                     for (size_t i = 1; i < skill.nTarget - 2; i++) {
-                        applyValueToHp(performer, targets, skill, target-i);
+                        applyValueToHp(performer, targets, skill, target-i, dialogueMessage);
                     }
                     if (target <= 0) {
                         //Target with no one to the left
-                        applyValueToHp(performer, targets, skill, target+(skill.nTarget/2));
+                        applyValueToHp(performer, targets, skill, target+(skill.nTarget/2), dialogueMessage);
                     } else if (target >= MAX_TEAM_MEMBERS_COUNT-1) {
                         //Target with no one to the right
-                        applyValueToHp(performer, targets, skill, target-(skill.nTarget/2));
+                        applyValueToHp(performer, targets, skill, target-(skill.nTarget/2), dialogueMessage);
                     } else {
                         //Target with other targets on both sides
-                        applyValueToHp(performer, targets, skill, target + (rand()%2==0?-1*(skill.nTarget/2):1*(skill.nTarget/2)));
+                        applyValueToHp(performer, targets, skill, target + (rand()%2==0?-1*(skill.nTarget/2):1*(skill.nTarget/2)), dialogueMessage);
                     }
                 } else {
                     for (size_t i = 1; i <= ((skill.nTarget - 1)/2); i++) {
                         int right = target+i;
-                        if (right < MAX_TEAM_MEMBERS_COUNT) applyValueToHp(performer, targets, skill, right);
+                        if (right < MAX_TEAM_MEMBERS_COUNT) applyValueToHp(performer, targets, skill, right, dialogueMessage);
                         int left = target-i;
-                        if (left >= 0) applyValueToHp(performer, targets, skill, left);
+                        if (left >= 0) applyValueToHp(performer, targets, skill, left, dialogueMessage);
                     }
                 }
             }
         } else if (strcmp("Energy", skill.affectTo) == 0 && skill.value != 0) {
             if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging) printf("  %s attempted to dodge but failed.\n", targets[target].name);
+            if (strcmp("Enemy", skill.target) == 0 && targets[target].isDodging) snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s attempted to dodge but failed.\n  ", targets[target].name);
             if (skill.nTarget >= 1) {
-                applyValueToEnergy(performer, targets, skill, target);
+                applyValueToEnergy(performer, targets, skill, target, dialogueMessage);
             }
             //For multiple targets, if odd then deal damage to the left and right, if even then deal damage to the left or right randomly
             if (skill.nTarget > 1){
                 if (skill.nTarget%2 == 0){
                     for (size_t i = 1; i < skill.nTarget - 2; i++) {
-                        applyValueToEnergy(performer, targets, skill, target+i);
+                        applyValueToEnergy(performer, targets, skill, target+i, dialogueMessage);
                     }
                     for (size_t i = 1; i < skill.nTarget - 2; i++) {
-                        applyValueToEnergy(performer, targets, skill, target-i);
+                        applyValueToEnergy(performer, targets, skill, target-i, dialogueMessage);
                     }
                     if (target <= 0) {
                         //Target with no one to the left
-                        applyValueToEnergy(performer, targets, skill, target+(skill.nTarget/2));
+                        applyValueToEnergy(performer, targets, skill, target+(skill.nTarget/2), dialogueMessage);
                     } else if (target >= MAX_TEAM_MEMBERS_COUNT-1) {
                         //Target with no one to the right
-                        applyValueToEnergy(performer, targets, skill, target-(skill.nTarget/2));
+                        applyValueToEnergy(performer, targets, skill, target-(skill.nTarget/2), dialogueMessage);
                     } else {
                         //Target with other targets on both sides
-                        applyValueToEnergy(performer, targets, skill, target + (rand()%2==0?-1*(skill.nTarget/2):1*(skill.nTarget/2)));
+                        applyValueToEnergy(performer, targets, skill, target + (rand()%2==0?-1*(skill.nTarget/2):1*(skill.nTarget/2)), dialogueMessage);
                     }
                 } else {
                     for (size_t i = 1; i <= ((skill.nTarget - 1)/2); i++) {
                         int right = target+i;
-                        if (right < MAX_TEAM_MEMBERS_COUNT) applyValueToEnergy(performer, targets, skill, right);
+                        if (right < MAX_TEAM_MEMBERS_COUNT) applyValueToEnergy(performer, targets, skill, right, dialogueMessage);
                         int left = target-i;
-                        if (left >= 0) applyValueToEnergy(performer, targets, skill, left);
+                        if (left >= 0) applyValueToEnergy(performer, targets, skill, left, dialogueMessage);
                     }
                 }
             }
         }
     } else {
         printf("  %s does not have enough energy to perform %s!\n", performer->name, skill.name);
+        snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s does not have enough energy to perform %s!\n  ", performer->name, skill.name);
     }
 }
 
@@ -171,6 +184,7 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
         if (actor->effects[i].remaining > 0) {
             if (actor->effects[i].remaining == 0) {
                 printf("  %s's %s effect has ended.\n", actor->name, actor->effects[i].name);
+                snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s's %s effect has ended.\n  ", actor->name, actor->effects[i].name);
                 // Remove the effect
                 for (size_t j = i; j < actor->effectsCount - 1; j++) {
                     actor->effects[j] = actor->effects[j + 1];
@@ -179,28 +193,34 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
                 i--;
             }
             printf("  %s is under the %s effect: ", actor->name, actor->effects[i].name);
+            snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s is under the %s effect: ", actor->name, actor->effects[i].name);
             if (strcmp("HP", actor->effects[i].affectTo) == 0) {
                 actor->HP += actor->effects[i].value;
                 if (actor->HP > actor->maxHP) actor->HP = actor->maxHP;
                 if (actor->HP < 0) actor->HP = 0;
                 if (actor->HP == 0) {
                     printf("%s is dead.\n", actor->name);
+                    snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s is dead.\n  ", actor->name);
                 } else {
                     printf("%s's HP is now %d.\n", actor->name, actor->HP);
+                    snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s's HP is now %d.\n  ", actor->name, actor->HP);
                 }
             } else if (strcmp("Energy", actor->effects[i].affectTo) == 0) {
                 actor->energy += actor->effects[i].value;
                 if (actor->energy > MAX_ENERGY) actor->energy = MAX_ENERGY;
                 printf("%s's energy is now %d.\n", actor->name, actor->energy);
+                snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s's energy is now %d.\n  ", actor->name, actor->energy);
             }
             actor->effects[i].remaining--;
             printf("  %s's %s effect will last for %d more turns.\n", actor->name, actor->effects[i].name, actor->effects[i].remaining);
+            snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s's %s effect will last for %d more turns.\n  ", actor->name, actor->effects[i].name, actor->effects[i].remaining);
         }
     }
     
     int action = 0;
     if (team == 1) { // Player
-        printf("\n  %s's turn! (HP: %d, Energy: %d)\n", actor->name, actor->HP, actor->energy);
+        printf(COLOR_YELLOW "  [PLAYER CONTROLS]------------------------------------------------------\n" COLOR_RESET);
+        printf("  %s's turn! (HP: %d, Energy: %d)\n", actor->name, actor->HP, actor->energy);
         printf("  0. Dodge\n");
         for (size_t i = 0; i < actor->skillsCount; i++)
         {
@@ -238,7 +258,7 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
             }
             if (team == 1) {
                 do {
-                    printf("  Choose a target (1-%d): ", MAX_TEAM_MEMBERS_COUNT);
+                    printf("  Choose a target \033[36m(1-%d)\033[0m: ", MAX_TEAM_MEMBERS_COUNT);
                     char input[50];
                     fgets(input, sizeof input, stdin);
                     input[strcspn(input, "\n")] = 0;
@@ -258,7 +278,18 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
                     target = rand() % MAX_TEAM_MEMBERS_COUNT;
                 }
             }
-            performAction(actor, allies, target, action-1);
+            performAction(actor, allies, target, action-1, dialogueMessage);
+        } else if (strcmp("Self", actor->skills[action-1].target) == 0){
+            //look for the actor in the allies array
+            int target = -1;
+            for (size_t i = 0; i < MAX_TEAM_MEMBERS_COUNT; i++)
+            {
+                if (strcmp(actor->name, allies[i].name) == 0) {
+                    target = i;
+                    break;
+                }
+            }
+            performAction(actor, allies, target, action-1, dialogueMessage);
         } else {
             int target = -1;
             //Check if all targets are dead
@@ -275,7 +306,7 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
             }
             if (team == 1) {
                 do {
-                    printf("  Choose a target (1-%d): ", MAX_TEAM_MEMBERS_COUNT);
+                    printf("  Choose a target \033[35m(1-%d)\033[0m: ", MAX_TEAM_MEMBERS_COUNT);
                     char input[50];
                     fgets(input, sizeof input, stdin);
                     input[strcspn(input, "\n")] = 0;
@@ -294,22 +325,22 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
                     target = rand() % MAX_TEAM_MEMBERS_COUNT;
                 }
             }
-            performAction(actor, opponents, target, action-1);
+            performAction(actor, opponents, target, action-1, dialogueMessage);
         }
     } else if (actor->energy >= DODGE_COST) {
         actor->energy -= DODGE_COST;
         printf("  %s prepares to dodge with a %d%% chance.\n", actor->name, actor->DODGE);
-        snprintf(dialogueMessage, 250, "  %s prepares to dodge with a %d%% chance.\n", actor->name, actor->DODGE);
+        snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s prepares to dodge with a %d%% chance.\n  ", actor->name, actor->DODGE);
     } else {
         printf("  %s doesn't have enough energy to dodge. Resting this turn\n", actor->name);
-        snprintf(dialogueMessage, 250, "  %s doesn't have enough energy to dodge. Resting this turn\n", actor->name);
+        snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s doesn't have enough energy to dodge. Resting this turn\n  ", actor->name);
     }
 }
 
 // Handle a full round
 void handleTurn(Character *allChars, Team players, Team enemies, int totalChars, char *dialogueMessage) {
     //printf("\n--- Turn start ---\n");
-    
+    snprintf(dialogueMessage, 750, "");
     for (size_t i = 0; i < players.membersCount; i++) {
         if (strcmp(players.members[i].name, allChars[0].name) == 0) takeTurn(&players.members[i], players.members, enemies.members, 1, dialogueMessage);
     }

@@ -22,11 +22,27 @@ int main(int argc, char const *argv[]) {
             printf("Exiting the game. Goodbye!\n");
             break;
         }
+        Team players = newEmptyTeam();
+        Team enemies = newEmptyTeam();
+        /*while (players.membersCount == 0) {
+            char teamName[50];
+            printf("Enter the name of the team you want to play with: ");
+            fgets(teamName, sizeof teamName, stdin);
+            players = getTeam(teamName);
+        }
+        while (enemies.membersCount == 0) {
+            char teamName[50];
+            printf("Available teams:\n");
+            printf("  - Team1\n");
+            printf("Enter the name of the team you want to play against: ");
+            fgets(teamName, sizeof teamName, stdin);
+            enemies = getTeam(teamName);
+        }*/
+        players = getTeam("Team2");
+        enemies = getTeam("Example");
         printf("Starting new combat...\n");
         srand(time(NULL));
 
-        Team players = getTeam("Example");
-        Team enemies = getTeam("Team2");
         Character allChars[MAX_TEAM_MEMBERS_COUNT * 2];
 
         int round = 1;
@@ -34,13 +50,13 @@ int main(int argc, char const *argv[]) {
         int enemiesAlive = 3;
         
         char *dialogueMessage = NULL;
-        dialogueMessage = malloc(250 * sizeof(char));
-        snprintf(dialogueMessage, 250, "No action yet...\n");
+        dialogueMessage = malloc(750 * sizeof(char));
+        snprintf(dialogueMessage, 750, "");
         
         time_t start = time(NULL);
 
         while (enemiesAlive > 0 && playersAlive > 0) {
-            if (time(NULL) - start >= 2) {
+            if (time(NULL) - start >= TURN_COOLDOWN) {
                 playersAlive = 0;
                 for (int i = 0; i < players.membersCount; i++) {
                     if (players.members[i].HP > 0) {
@@ -59,6 +75,7 @@ int main(int argc, char const *argv[]) {
                 handleTurn(allChars, players, enemies, MAX_TEAM_MEMBERS_COUNT * 2, dialogueMessage);
                 system("clear");
                 system("cls");
+                sortCharactersByEnergy(allChars, MAX_TEAM_MEMBERS_COUNT * 2);
                 displayFullInterface(players, enemies, dialogueMessage, allChars);
                 start = time(NULL);
             }

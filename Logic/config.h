@@ -10,3 +10,4 @@
 #define MAX_SKILLS             5            // Maximum amount of skills a character/enemy can have.
 #define MAX_EFFECTS            20           // Maximum amount of effects a character/enemy can have.
 #define MAX_TEAM_MEMBERS_COUNT 3            // Maximum number of character in a single team.
+#define TURN_COOLDOWN          3            // How long to wait between turns

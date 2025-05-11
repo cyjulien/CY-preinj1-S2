@@ -1,10 +1,13 @@
 Name: Geralt
 Lv: 1
-maxHP: 6034
+maxHP: 4500
 ATK: 750
 DEF: 700
-DODGE: 10
-SPD: 60
+DODGE: 20
+SPD: 70
 Energy: 500
 Skills:
     Basic Attack
+    Igni
+    Yrden
+    Heavy strike

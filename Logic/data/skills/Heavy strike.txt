@@ -1,0 +1,8 @@
+Name: Heavy strike
+Desc: Deals a lot of damage to a single enemy
+Cost: 200
+Value: -200
+AffectTo: HP
+Target: Enemy
+NTarget: 1
+ApplyEffect: Null

@@ -1,5 +1,5 @@
 Name: Blessing of life
-Desc: Heals an ally a portion of it's max HP every turn.
+Desc: Heals an ally some HP every turn.
 Value: 100
 AffectTo: HP
 Target: Ally

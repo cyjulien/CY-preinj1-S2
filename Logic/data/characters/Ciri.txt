@@ -1,0 +1,12 @@
+Name: Ciri
+Lv: 1
+maxHP: 3500
+ATK: 600
+DEF: 500
+DODGE: 60
+SPD: 80
+Energy: 500
+Skills:
+    Basic Attack
+    Teleport
+    Charged Attack

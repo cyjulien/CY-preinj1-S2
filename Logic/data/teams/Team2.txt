@@ -1,5 +1,5 @@
 Name: Team2
 Members:
-  Johnson
+  Ciri
   Geralt
-  Luke
+  Yennefer

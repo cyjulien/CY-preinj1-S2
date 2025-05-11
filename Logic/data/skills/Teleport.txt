@@ -1,0 +1,8 @@
+Name: Teleport
+Desc: Instantly teleports an ally.
+Cost: 350
+Value: 500
+AffectTo: Energy
+Target: Self
+NTarget: 1
+ApplyEffect: Null
