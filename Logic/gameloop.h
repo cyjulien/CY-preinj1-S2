@@ -192,7 +192,7 @@ int compareByEnergy(const void *a, const void *b) {
 
 // Handle actions for a character
 int takeTurn(Character *actor, Character *allies, Character *opponents, int team, char *dialogueMessage) {
-    if (actor->HP <= 0) return; // Skip if dead
+    if (actor->HP <= 0) return 0; // Skip if dead
     //Count down effects
     for (size_t i = 0; i < actor->effectsCount; i++) {
         if (actor->effects[i].remaining > 0) {
