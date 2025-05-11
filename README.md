@@ -47,9 +47,11 @@ Colors:
 
 The green bar represents the health bar
 
-Blue indicates enemies
+The blue bar represents the energy bar
 
 Purple indicates teammates
+
+Blue indicates enemies
 
 Combat:
 When all members of a team are KO, the opposing team wins the battle, and the player is returned to the main menu.
