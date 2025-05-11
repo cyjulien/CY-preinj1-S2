@@ -8,3 +8,4 @@ SPD: 75
 Energy: 500
 Skills:
     Basic Attack
+    Slash

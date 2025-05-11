@@ -1,6 +1,6 @@
 Name: Charged Attack
 Desc: Deals massive damage to a single enemy
-Cost: 400
+Cost: 500
 Value: -500
 AffectTo: HP
 Target: Enemy

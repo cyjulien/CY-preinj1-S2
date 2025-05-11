@@ -54,6 +54,7 @@ int main(int argc, char const *argv[]) {
         snprintf(dialogueMessage, 750, "");
         
         time_t start = time(NULL);
+        int firstRun = 1;
 
         while (enemiesAlive > 0 && playersAlive > 0) {
             if (time(NULL) - start >= TURN_COOLDOWN) {
@@ -70,6 +71,13 @@ int main(int argc, char const *argv[]) {
                         enemiesAlive++;
                     }
                     allChars[i + players.membersCount] = enemies.members[i];
+                }
+                if (firstRun) {
+                    firstRun = 0;
+                    system("clear");
+                    system("cls");
+                    sortCharactersByEnergy(allChars, MAX_TEAM_MEMBERS_COUNT * 2);
+                    displayFullInterface(players, enemies, dialogueMessage, allChars);
                 }
                 sortCharactersByEnergy(allChars, MAX_TEAM_MEMBERS_COUNT * 2);
                 handleTurn(allChars, players, enemies, MAX_TEAM_MEMBERS_COUNT * 2, dialogueMessage);
