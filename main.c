@@ -66,7 +66,7 @@ int main(int argc, char const *argv[]) {
         
         char *dialogueMessage = NULL;
         dialogueMessage = malloc(750 * sizeof(char));
-        snprintf(dialogueMessage, 750, "");
+        snprintf(dialogueMessage, 750, "  No action yet...");
         
         time_t start = time(NULL);
         int firstRun = 1;
