@@ -31,3 +31,7 @@ Lancer le programme via la commande ./game et choisir les actions pour chaque pe
 
 Choisir une action :
 Lors du tour d'un personnage, vous aurez la possibilité de choisir entre esquiver ou utiliser une compétence. Vous pouvez aussi sélectionner vos cibles.
+Couleur :
+ la barre verte correspond à la barre de vie 
+ le bleu correpond aux ennemis
+ le violet correspond aux équipiers 
