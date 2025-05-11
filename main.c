@@ -90,14 +90,14 @@ int main(int argc, char const *argv[]) {
                 if (firstRun) {
                     firstRun = 0;
                     system("clear");
-                    system("cls");
+                    //system("cls");
                     sortCharactersByEnergy(allChars, MAX_TEAM_MEMBERS_COUNT * 2);
                     displayFullInterface(players, enemies, dialogueMessage, allChars);
                 }
                 sortCharactersByEnergy(allChars, MAX_TEAM_MEMBERS_COUNT * 2);
                 handleTurn(allChars, players, enemies, MAX_TEAM_MEMBERS_COUNT * 2, dialogueMessage);
                 system("clear");
-                system("cls");
+                //system("cls");
                 sortCharactersByEnergy(allChars, MAX_TEAM_MEMBERS_COUNT * 2);
                 displayFullInterface(players, enemies, dialogueMessage, allChars);
                 start = time(NULL);
