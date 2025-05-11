@@ -226,15 +226,19 @@ int takeTurn(Character *actor, Character *allies, Character *opponents, int team
             //Log the printf to the dialogue box
             snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s's %s effect will last for %d more turns.\n  ", actor->name, actor->effects[i].name, actor->effects[i].remaining);
         } else if (actor->effects[i].remaining == 0) {
-            printf("  %s's %s effect has ended.\n", actor->name, actor->effects[i].name);
-            //Log the printf to the dialogue box
-            snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s's %s effect has ended.\n  ", actor->name, actor->effects[i].name);
-            // Remove the effect
-            for (size_t j = i; j < actor->effectsCount - 1; j++) {
-                actor->effects[j] = actor->effects[j + 1];
+            //check if effect name is Null
+            if (strcmp("Null", actor->effects[i].name) != 0) {
+                //Remove the effect
+                printf("  %s's %s effect has ended.\n", actor->name, actor->effects[i].name);
+                //Log the printf to the dialogue box
+                snprintf(dialogueMessage + strlen(dialogueMessage), 750 - strlen(dialogueMessage), "%s's %s effect has ended.\n  ", actor->name, actor->effects[i].name);
+                // Remove the effect
+                for (size_t j = i; j < actor->effectsCount - 1; j++) {
+                    actor->effects[j] = actor->effects[j + 1];
+                }
+                actor->effectsCount--;
+                i--;
             }
-            actor->effectsCount--;
-            i--;
         }
     }
     
