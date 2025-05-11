@@ -27,11 +27,22 @@ Le jeu se joue sur plusieurs tours. À chaque tour, les personnages choisissent 
 
 Exemples d'utilisation
 Commencer une partie :
-Lancer le programme via la commande ./game et choisir les actions pour chaque personnage lors de leur tour.
+Lancer le programme via la commande ./main puis arriver sur le menu principal :
+Choisir 1 pour commencer un combat quia lance le combat
+Choisir 2 pour quitter
+
+IA :
+ les tours de l'ordinateur se fffdont automatiquement
 
 Choisir une action :
-Lors du tour d'un personnage, vous aurez la possibilité de choisir entre esquiver ou utiliser une compétence. Vous pouvez aussi sélectionner vos cibles.
-Couleur :
+Lors du tour d'un personnage, vous aurez la possibilité de choisir  d'utiliser une compétence selon les numeros afficher 0 l'craan. Vous pouvez aussi sélectionner vos cibles de 1 a 3.
+les actions sont affichés dans la boite de dialogue
+ Couleur :
  la barre verte correspond à la barre de vie 
  le bleu correpond aux ennemis
  le violet correspond aux équipiers 
+
+
+
+Combat : 
+ lorsque tout les membres d'une team est ko l'equiupe adverse remporte le combat et le joeur est renvoyé au menu principal
