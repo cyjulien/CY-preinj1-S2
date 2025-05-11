@@ -59,8 +59,8 @@ Character newEmptyCharacter() {
   {
     character.effects[i] = newEmptyEffect();
   }
-  return character;
   character.effectsCount = 0;
+  return character;
 }
 
 /**
