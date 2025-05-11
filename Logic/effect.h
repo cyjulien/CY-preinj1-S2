@@ -55,7 +55,8 @@ void logEffect(Effect effect) {
  */
 Effect getEffect(char *name) {
     Effect effect = newEmptyEffect();
-    effect.name = "Null";
+    effect.name = malloc((strlen("Null")+1) * sizeof(char));
+    memcpy(effect.name, "Null", (strlen("Null")+1));
     FILE *data = NULL;
     char path[50];
     snprintf(path, sizeof(path), "Logic/data/effects/%s.txt", name); //Using snprintf instead of strcat to avoid memory issues
