@@ -1,48 +1,55 @@
-Ce jeu permet à deux équipes de s'affronter en utilisant des personnages ayant des statistiques variées et des compétences spéciales. Le combat est géré sur plusieurs tours, chaque personnage ayant la possibilité de régénérer son énergie, d'attaquer, de se soigner ou d'appliquer des effets sur ses alliés ou ennemis.
+This game allows two teams to face off using characters with various stats and special abilities. The combat is turn-based, and each character can regenerate energy, attack, heal, or apply effects to allies or enemies.
 
-Fonctionnalités du jeu :
-Système de tour par tour : Chaque équipe prend son tour pour effectuer des actions.
+Game Features
+Turn-based system:
+Each team takes turns performing actions.
 
-Énergie et compétences : Les personnages utilisent de l'énergie pour effectuer des compétences. Ils peuvent régénérer leur énergie pendant les tours.
+Energy and Skills:
+Characters use energy to perform skills. They can regenerate energy during their turn.
 
-Effets de statut : Des effets comme des soins, des dégâts, ou des améliorations temporaires peuvent être appliqués aux personnages.
+Status Effects:
+Effects such as healing, damage, or temporary stat boosts can be applied to characters.
 
-Esquive : Un personnage peut tenter d'esquiver une attaque si suffisamment d'énergie est disponible.
+Dodge:
+A character can attempt to dodge an attack if enough energy is available.
 
-Fonctionnalités principales
-1. Régénération d'énergie
-Les personnages regagnent de l'énergie en fonction de leur vitesse et du nombre total de personnages sur le terrain. L'énergie est limitée par une valeur maximale (MAX_ENERGY).
+Core Functionalities
+Energy Regeneration:
+Characters regain energy based on their speed and the total number of characters on the field. Energy is capped at a maximum value (MAX_ENERGY).
 
-2. Compétences et actions
-Chaque personnage possède plusieurs compétences, chacune ayant un coût en énergie. Lors de son tour, un personnage peut choisir une compétence pour attaquer un ennemi ou soigner un allié. L'action peut échouer si l'ennemi esquive ou si le personnage manque d'énergie.
+Skills and Actions:
+Each character has several skills, each with an energy cost. During their turn, a character can choose a skill to attack an enemy or heal an ally. The action may fail if the enemy dodges or if the character lacks sufficient energy.
 
-3. Esquive
-Les personnages ont une chance d'esquiver une attaque en fonction de leur énergie et de leurs statistiques. Si un personnage réussit son esquive, il évite l'attaque.
+Dodging:
+Characters have a chance to dodge an attack based on their energy and stats. If a character successfully dodges, they avoid the attack entirely.
 
-4. Effets de statut
-Les personnages peuvent appliquer des effets de statut sur eux-mêmes ou leurs adversaires, tels que des augmentations de statistiques ou des dégâts sur plusieurs tours.
+Status Effects:
+Characters can apply status effects to themselves or their opponents, such as stat boosts or damage over time effects.
 
-5. Tour par tour
-Le jeu se joue sur plusieurs tours. À chaque tour, les personnages choisissent leurs actions et les effets sont appliqués. Les personnages ayant le plus d'énergie agissent en premier.
+Turn-Based Combat:
+The game is played over multiple turns. In each turn, characters choose actions and effects are applied. Characters with the most energy act first.
 
-Exemples d'utilisation
-Commencer une partie :
-Lancer le programme via la commande ./main puis arriver sur le menu principal :
-Choisir 1 pour commencer un combat quia lance le combat
-Choisir 2 pour quitter
+Usage Examples
+Start a Game:
+Launch the program using the ./main command to reach the main menu:
 
-IA :
- les tours de l'ordinateur se fffdont automatiquement
+Choose 1 to start a fight, which launches the battle
 
-Choisir une action :
-Lors du tour d'un personnage, vous aurez la possibilité de choisir  d'utiliser une compétence selon les numeros afficher 0 l'craan. Vous pouvez aussi sélectionner vos cibles de 1 a 3.
-les actions sont affichés dans la boite de dialogue
- Couleur :
- la barre verte correspond à la barre de vie 
- le bleu correpond aux ennemis
- le violet correspond aux équipiers 
+Choose 2 to quit
 
+AI:
+The computer's turns are played automatically.
 
+Choosing an Action:
+During a character's turn, you can choose a skill using the numbers displayed on the screen. You can also select targets from 1 to 3. Actions are displayed in the dialogue box.
 
-Combat : 
- lorsque tout les membres d'une team est ko l'equiupe adverse remporte le combat et le joeur est renvoyé au menu principal
+Colors:
+
+The green bar represents the health bar
+
+Blue indicates enemies
+
+Purple indicates teammates
+
+Combat:
+When all members of a team are KO, the opposing team wins the battle, and the player is returned to the main menu.
