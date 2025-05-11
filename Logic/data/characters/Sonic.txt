@@ -9,4 +9,4 @@ Energy: 500
 Skills:
     Basic Attack
     Dash
-    Speeding ball
+    Speeding Ball
