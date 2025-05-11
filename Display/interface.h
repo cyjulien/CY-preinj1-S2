@@ -55,7 +55,7 @@ void displayFullInterface(Team topTeam, Team bottomTeam, const char *dialogueMes
 
     // Character names with index
     for (int i = 0; i < topTeam.membersCount; i++) {
-        printf("  %-12s|%d|   ", topTeam.members[i].name, i);
+        printf("  %-12s|%d|   ", topTeam.members[i].name, i+1);
     }
     printf("\n");
 
@@ -79,7 +79,7 @@ void displayFullInterface(Team topTeam, Team bottomTeam, const char *dialogueMes
 
     // Character names with index
     for (int i = 0; i < bottomTeam.membersCount; i++) {
-        printf("  %-12s|%d|   ", bottomTeam.members[i].name, i);
+        printf("  %-12s|%d|   ", bottomTeam.members[i].name, i+1);
     }
     printf("\n");
 
