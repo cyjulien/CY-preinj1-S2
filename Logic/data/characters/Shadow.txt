@@ -1,0 +1,13 @@
+Name: Shadow
+Lv: 1
+maxHP: 4000
+ATK: 1000
+DEF: 400
+DODGE: 40
+SPD: 70
+Energy: 500
+Skills:
+    Basic Attack
+    Black hole
+    Teleport
+    Deep wound

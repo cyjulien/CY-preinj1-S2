@@ -1,0 +1,8 @@
+Name: Lightning bolt
+Desc: Summons a lightning bolt on the target, dealing damage and shocking them for 2 turns.
+Cost: 300
+Value: -200
+AffectTo: HP
+Target: Enemy
+NTarget: 1
+ApplyEffect: Shock

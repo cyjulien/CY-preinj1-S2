@@ -1,0 +1,12 @@
+Name: Sonic
+Lv: 1
+maxHP: 3500
+ATK: 700
+DEF: 500
+DODGE: 70
+SPD: 120
+Energy: 500
+Skills:
+    Basic Attack
+    Dash
+    Speeding ball

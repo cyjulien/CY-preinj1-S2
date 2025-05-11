@@ -1,5 +1,5 @@
 Name: Teleport
-Desc: Instantly teleports an ally.
+Desc: Instantly teleports yourself to play.
 Cost: 350
 Value: 500
 AffectTo: Energy

@@ -1,4 +1,4 @@
-Name: Team2
+Name: The Witcher
 Members:
   Ciri
   Geralt

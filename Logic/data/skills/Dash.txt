@@ -1,0 +1,8 @@
+Name: Dash
+Desc: Boosts the user's energy.
+Cost: 200
+Value: 300
+AffectTo: Energy
+Target: Self
+NTarget: 1
+ApplyEffect: Null

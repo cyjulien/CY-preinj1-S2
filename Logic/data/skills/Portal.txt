@@ -1,0 +1,8 @@
+Name: Portal
+Desc: Instantly teleports an ally to play.
+Cost: 400
+Value: 500
+AffectTo: Energy
+Target: Ally
+NTarget: 1
+ApplyEffect: Null

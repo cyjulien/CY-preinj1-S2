@@ -1,5 +1,0 @@
-Name: Example
-Members:
-  Example
-  Jhin
-  Titouan

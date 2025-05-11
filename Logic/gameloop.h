@@ -11,6 +11,8 @@ void regenerateEnergy(Character *characters, int count) {
             characters[i].energy += regen;
             if (characters[i].energy > MAX_ENERGY) characters[i].energy = MAX_ENERGY;
             //printf("%s regenerates %d energy.\n", characters[i].name, regen);
+        } else {
+            characters[i].energy = 0;
         }
     }
 }

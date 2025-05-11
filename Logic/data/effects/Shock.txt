@@ -1,0 +1,7 @@
+Name: Shock
+Desc: When shocked, takes damage on every turn.
+Value: -150
+AffectTo: HP
+Target: Ally
+NTarget: 1
+Duration: 2

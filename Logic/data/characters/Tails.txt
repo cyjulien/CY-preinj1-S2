@@ -1,12 +1,12 @@
-Name: Titouan
+Name: Tails
 Lv: 1
-maxHP: 2400
+maxHP: 3200
 ATK: 1200
 DEF: 500
-DODGE: 10
+DODGE: 70
 SPD: 40
-Energy: 400
+Energy: 500
 Skills:
     Basic Attack
-    Deep wound
     Heal
+    Explosion

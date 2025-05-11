@@ -1,0 +1,8 @@
+Name: Speeding Ball
+Desc: Deals damage to a single ennemy at a low cost
+Cost: 150
+Value: -110
+AffectTo: HP
+Target: Enemy
+NTarget: 1
+ApplyEffect: Null

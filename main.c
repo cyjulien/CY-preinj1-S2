@@ -24,22 +24,37 @@ int main(int argc, char const *argv[]) {
         }
         Team players = newEmptyTeam();
         Team enemies = newEmptyTeam();
-        /*while (players.membersCount == 0) {
+        while (players.membersCount == 0) {
             char teamName[50];
-            printf("Enter the name of the team you want to play with: ");
+            printf("Available teams:\n");
+            printf("  1 - Sonic\n");
+            printf("  2 - The Witcher\n");
+            printf("Enter the number of the team you want to play with: ");
             fgets(teamName, sizeof teamName, stdin);
-            players = getTeam(teamName);
+            if (atoi(teamName) == 1) {
+                players = getTeam("Sonic");
+            } else if (atoi(teamName) == 2) {
+                players = getTeam("The Witcher");
+            } else {
+                printf("Invalid team number. Please try again.\n");
+            }
+            
         }
         while (enemies.membersCount == 0) {
             char teamName[50];
             printf("Available teams:\n");
-            printf("  - Team1\n");
-            printf("Enter the name of the team you want to play against: ");
+            printf("  1 - Sonic\n");
+            printf("  2 - The Witcher\n");
+            printf("Enter the number of the team you want to play against: ");
             fgets(teamName, sizeof teamName, stdin);
-            enemies = getTeam(teamName);
-        }*/
-        players = getTeam("Team2");
-        enemies = getTeam("Example");
+            if (atoi(teamName) == 1) {
+                enemies = getTeam("Sonic");
+            } else if (atoi(teamName) == 2) {
+                enemies = getTeam("The Witcher");
+            } else {
+                printf("Invalid team number. Please try again.\n");
+            }
+        }
         printf("Starting new combat...\n");
         srand(time(NULL));
 
