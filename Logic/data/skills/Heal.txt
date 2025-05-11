@@ -1,7 +1,7 @@
 Name: Heal
 Desc: Instantly heals an ally.
 Cost: 250
-Value: 400
+Value: 80
 AffectTo: HP
 Target: Ally
 NTarget: 1

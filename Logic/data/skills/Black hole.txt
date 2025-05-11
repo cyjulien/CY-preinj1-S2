@@ -1,7 +1,7 @@
 Name: Black hole
 Desc: Gets rid of energy from all enemies.
 Cost: 500
-Value: -200
+Value: -120
 AffectTo: Energy
 Target: Enemy
 NTarget: 3

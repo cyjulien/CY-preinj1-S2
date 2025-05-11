@@ -34,28 +34,34 @@ int main(int argc, char const *argv[]) {
         int enemiesAlive = 3;
         
         char *dialogueMessage = NULL;
+        dialogueMessage = malloc(250 * sizeof(char));
+        snprintf(dialogueMessage, 250, "No action yet...\n");
+        
+        time_t start = time(NULL);
 
         while (enemiesAlive > 0 && playersAlive > 0) {
-            system("clear");
-            system("cls");
-
-            playersAlive = 0;
-            for (int i = 0; i < players.membersCount; i++) {
-                if (players.members[i].HP > 0) {
-                    playersAlive++;
+            if (time(NULL) - start >= 2) {
+                playersAlive = 0;
+                for (int i = 0; i < players.membersCount; i++) {
+                    if (players.members[i].HP > 0) {
+                        playersAlive++;
+                    }
+                    allChars[i] = players.members[i];
                 }
-                allChars[i] = players.members[i];
-            }
-            enemiesAlive = 0;
-            for (int i = 0; i < enemies.membersCount; i++) {
-                if (enemies.members[i].HP > 0) {
-                    enemiesAlive++;
+                enemiesAlive = 0;
+                for (int i = 0; i < enemies.membersCount; i++) {
+                    if (enemies.members[i].HP > 0) {
+                        enemiesAlive++;
+                    }
+                    allChars[i + players.membersCount] = enemies.members[i];
                 }
-                allChars[i + players.membersCount] = enemies.members[i];
+                sortCharactersByEnergy(allChars, MAX_TEAM_MEMBERS_COUNT * 2);
+                handleTurn(allChars, players, enemies, MAX_TEAM_MEMBERS_COUNT * 2, dialogueMessage);
+                system("clear");
+                system("cls");
+                displayFullInterface(players, enemies, dialogueMessage, allChars);
+                start = time(NULL);
             }
-            sortCharactersByEnergy(allChars, MAX_TEAM_MEMBERS_COUNT * 2);
-            displayFullInterface(players, enemies, dialogueMessage, allChars);
-            handleTurn(allChars, players, enemies, MAX_TEAM_MEMBERS_COUNT * 2, dialogueMessage);
         }
         printf(COLOR_YELLOW "\n[BATTLE RESULT]--------------------------------------------------------------\n" COLOR_RESET);
 

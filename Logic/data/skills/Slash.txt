@@ -1,7 +1,7 @@
 Name: Slash
 Desc: Slashes forward dealing damage to 2 enemies
 Cost: 300
-Value: -200
+Value: -250
 AffectTo: HP
 Target: Enemy
 NTarget: 2

@@ -1,4 +1,4 @@
-Name: Brun
+Name: Burn
 Desc: When burning, takes damage on every turn.
 Value: -100
 AffectTo: HP

@@ -16,10 +16,21 @@ void regenerateEnergy(Character *characters, int count) {
 }
 
 void applyValueToHp(Character *performer, Character *targets, Skill skill, int value) { // Helper function to avoid code duplication
-    targets[value].HP += skill.value;
-    if (targets[value].HP < 0) targets[value].HP = 0;
-    if (targets[value].HP > targets[value].maxHP) targets[value].HP = targets[value].maxHP;
-    printf("  %s uses ability %s on %s, it did %d %s. %s's HP is now %d.", performer->name, skill.name, targets[value].name, abs(skill.value), skill.value<0?"damage":"heal", targets[value].name, targets[value].HP);
+    if (skill.value < 0) {
+        int damage = (performer->ATK * (1 - targets[value].DEF/(targets[value].DEF+1000.0))) * ((-skill.value) / 100.0);
+        if (damage < 0) damage = 0;
+        targets[value].HP -= damage;
+        if (targets[value].HP < 0) targets[value].HP = 0;
+        if (targets[value].HP > targets[value].maxHP) targets[value].HP = targets[value].maxHP;
+        printf("  %s uses ability %s on %s, it did %d damage. %s's HP is now %d.", performer->name, skill.name, targets[value].name, damage, targets[value].name, targets[value].HP);
+    } else {
+        int heal = performer->maxHP * (skill.value / 100.0);
+        if (heal < 0) heal = 0;
+        targets[value].HP += heal;
+        if (targets[value].HP < 0) targets[value].HP = 0;
+        if (targets[value].HP > targets[value].maxHP) targets[value].HP = targets[value].maxHP;
+        printf("  %s uses ability %s on %s, it healed %d HP. %s's HP is now %d.", performer->name, skill.name, targets[value].name, heal, targets[value].name, targets[value].HP);
+    }
     if (strcmp("Null", skill.applyEffect) != 0) {
         Effect effect = getEffect(skill.applyEffect);
         int effectAlreadyApplied = 0;
@@ -288,12 +299,10 @@ void takeTurn(Character *actor, Character *allies, Character *opponents, int tea
     } else if (actor->energy >= DODGE_COST) {
         actor->energy -= DODGE_COST;
         printf("  %s prepares to dodge with a %d%% chance.\n", actor->name, actor->DODGE);
-        dialogueMessage = malloc(250 * sizeof(char));
-        snprintf(dialogueMessage, sizeof(dialogueMessage), "  %s prepares to dodge with a %d%% chance.\n", actor->name, actor->DODGE);
+        snprintf(dialogueMessage, 250, "  %s prepares to dodge with a %d%% chance.\n", actor->name, actor->DODGE);
     } else {
         printf("  %s doesn't have enough energy to dodge. Resting this turn\n", actor->name);
-        dialogueMessage = malloc(250 * sizeof(char));
-        snprintf(dialogueMessage, sizeof(dialogueMessage), "  %s doesn't have enough energy to dodge. Resting this turn\n", actor->name);
+        snprintf(dialogueMessage, 250, "  %s doesn't have enough energy to dodge. Resting this turn\n", actor->name);
     }
 }
 

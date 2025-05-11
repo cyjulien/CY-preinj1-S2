@@ -1,6 +1,6 @@
 Name: Luke
 Lv: 1
-maxHP: 400
+maxHP: 4000
 ATK: 900
 DEF: 400
 DODGE: 80

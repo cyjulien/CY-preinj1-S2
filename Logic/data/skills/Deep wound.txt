@@ -1,7 +1,7 @@
 Name: Deep wound
 Desc: Deals damage and wounds an enemy deeply causing it to bleed for 3 turns
 Cost: 350
-Value: -200
+Value: -150
 AffectTo: HP
 Target: Enemy
 NTarget: 1
