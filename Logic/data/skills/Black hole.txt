@@ -1,5 +1,5 @@
 Name: Black hole
-Desc: Gets rid of enery from all enemies.
+Desc: Gets rid of energy from all enemies.
 Cost: 500
 Value: -200
 AffectTo: Energy
