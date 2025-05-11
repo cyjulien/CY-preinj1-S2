@@ -105,9 +105,9 @@ void displayFullInterface(Team topTeam, Team bottomTeam, const char *dialogueMes
             if (strcmp(topTeam.members[j].name, allChars[i].name) == 0) team = 0;
         }
         if (team == 0) {
-            printf("  %d. %s%s%s\n", (i + 1), COLOR_CYAN, allChars[i].name, COLOR_RESET);
+            printf("  %ld. %s%s%s\n", (i + 1), COLOR_CYAN, allChars[i].name, COLOR_RESET);
         } else {
-            printf("  %d. %s%s%s\n", (i + 1), COLOR_MAGENTA, allChars[i].name, COLOR_RESET);
+            printf("  %ld. %s%s%s\n", (i + 1), COLOR_MAGENTA, allChars[i].name, COLOR_RESET);
         }
     }
     // ─── DIALOGUE BOX ───────────────────────────────────────────────────
