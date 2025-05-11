@@ -1,6 +1,6 @@
 Name: Bleed
-Desc: When bleeding, takes damage on every turn for a portion the target's max HP.
-Value: -5%
+Desc: When bleeding, takes damage on every turn.
+Value: -200
 AffectTo: HP
 Target: Ally
 NTarget: 1

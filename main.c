@@ -21,7 +21,6 @@ int main(int argc, char const *argv[]) {
             allChars[i + players.membersCount] = enemies.members[i];
         }
         char *dialogueMessage = NULL;
-        //displayInterface(enemies, players, dialogueMessage);
         displayFullInterface(players, enemies, dialogueMessage);
         handleRound(allChars, players, enemies, MAX_TEAM_MEMBERS_COUNT * 2, dialogueMessage);
     }
